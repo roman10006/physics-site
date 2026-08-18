@@ -194,6 +194,15 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+/* Логотип-кнопка без белого фона */
+.logo-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-primary);
+}
 
 /* Навигационные ссылки */
 .nav-link {
@@ -456,6 +465,7 @@ body {
 
 /* ============ БЕГУЩАЯ СТРОКА ============ */
 .ticker {
+  width: 100%;
   margin-top: 60px;
   padding: 20px 0;
   background: var(--bg-secondary);
@@ -821,12 +831,27 @@ body {
   }
   
   .bento-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 180px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 190px;
+    gap: 12px;
   }
   
-  .bento-large {
-    grid-row: span 1;
+  .bento-card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  
+  .bento-icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .bento-title {
+    font-size: 1.05rem;
+  }
+  
+  .bento-desc {
+    font-size: 0.75rem;
   }
   
   .footer {
@@ -873,10 +898,14 @@ body {
   }
   
   .bento-card {
-    padding: 24px;
+    padding: 14px;
   }
   
   .bento-title {
-    font-size: 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .bento-desc {
+    font-size: 0.7rem;
   }
 }
