@@ -3,26 +3,6 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="dark"] {
-  --bg-primary: #0a0a1a;
-  --bg-secondary: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.15);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --text-muted: rgba(255, 255, 255, 0.4);
-  --header-bg: rgba(10, 10, 26, 0.8);
-  --modal-bg: linear-gradient(135deg, #1a1a2e, #16213e);
-  --cookie-bg: rgba(20, 20, 40, 0.95);
-  --accent-blue: #4F7DF5;
-  --accent-purple: #9D4EDD;
-  --accent-pink: #EC4899;
-  --accent-green: #10B981;
-  --accent-yellow: #F59E0B;
-  --star-color: white;
-}
-
 [data-theme="light"] {
   --bg-primary: #eef2ff;
   --bg-secondary: rgba(255, 255, 255, 0.65);
@@ -43,6 +23,25 @@
   --star-color: rgba(139, 92, 246, 0.35);
 }
 
+[data-theme="dark"] {
+  --bg-primary: #0a0a1a;
+  --bg-secondary: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --header-bg: rgba(10, 10, 26, 0.8);
+  --modal-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+  --cookie-bg: rgba(20, 20, 40, 0.95);
+  --accent-blue: #4F7DF5;
+  --accent-purple: #9D4EDD;
+  --accent-pink: #EC4899;
+  --accent-green: #10B981;
+  --accent-yellow: #F59E0B;
+  --star-color: white;
+}
 /* ============ БАЗОВЫЕ СТИЛИ ============ */
 * {
   margin: 0;
@@ -1110,4 +1109,25 @@ body {
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
+}
+/* ============ КНОПКА TELEGRAM ============ */
+.telegram-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #2AABEE, #229ED9);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 14px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: var(--transition);
+  box-shadow: 0 8px 25px rgba(42, 171, 238, 0.35);
+}
+
+.telegram-link:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(42, 171, 238, 0.5);
 }

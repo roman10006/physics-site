@@ -14,6 +14,7 @@ function App() {
   const [cookieAccepted, setCookieAccepted] = useState(() => {
     return localStorage.getItem('cookieAccepted') === 'true'
   })
+  const [contactOpen, setContactOpen] = useState(false)
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
 
   // === ЭФФЕКТЫ ===
@@ -338,7 +339,7 @@ function App() {
                   <button 
                     key={link.id}
                     className="footer-link"
-                    onClick={() => openModal(link.label)}
+                    onClick={() => link.id === 'contacts' ? setContactOpen(true) : openModal(link.label)}
                   >
                     {link.label}
                   </button>
@@ -439,11 +440,51 @@ function App() {
               </div>
             </div>
 
-            <button 
+                        <button 
               className="btn btn-primary btn-large"
               onClick={() => setModalOpen(false)}
             >
               Понял, жду запуска!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ========== МОДАЛКА КОНТАКТОВ ========== */}
+      {contactOpen && (
+        <div className="modal-overlay" onClick={() => setContactOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close"
+              onClick={() => setContactOpen(false)}
+            >
+              ✕
+            </button>
+            
+            <div className="modal-emoji">📨</div>
+            <h2 className="modal-title">Контакты</h2>
+            <p className="modal-text">
+              Можете написать в Telegram:
+            </p>
+            
+            <a 
+              className="telegram-link" 
+              href="https://t.me/Fababab" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              ✈️ @Fababab
+            </a>
+            
+            <p className="modal-subtext">
+              Вопросы, идеи и предложения — пиши, отвечу всем!
+            </p>
+            
+            <button 
+              className="btn btn-primary btn-large"
+              onClick={() => setContactOpen(false)}
+            >
+              Понятно!
             </button>
           </div>
         </div>
