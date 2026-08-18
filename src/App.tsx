@@ -14,14 +14,11 @@ function App() {
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
 
   // === ЭФФЕКТЫ ===
-  
-  // Применяем тему к body
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  // Генерируем звёзды при загрузке
   useEffect(() => {
     const newStars = Array.from({length: 50}, () => ({
       x: Math.random() * 100,
@@ -33,7 +30,6 @@ function App() {
   }, [])
 
   // === ФУНКЦИИ ===
-  
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   }
@@ -48,8 +44,12 @@ function App() {
     localStorage.setItem('cookieAccepted', 'true')
   }
 
-  // === ДАННЫЕ ===
-  
+  // КНОПКА "ГЛАВНАЯ" — плавно возвращает на главный экран
+  const goHome = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // === ДАННЫЕ (теперь все карточки одинаковые) ===
   const cards = [
     {
       id: 'materials',
@@ -57,7 +57,6 @@ function App() {
       title: 'Материалы',
       description: 'Теория и задачи по всем темам 7-11 классов',
       color: '#4F7DF5',
-      size: 'large',
     },
     {
       id: 'news',
@@ -65,7 +64,6 @@ function App() {
       title: 'Новости',
       description: 'Олимпиады, турниры и события в мире физики',
       color: '#10B981',
-      size: 'small',
     },
     {
       id: 'forum',
@@ -73,7 +71,6 @@ function App() {
       title: 'Форум',
       description: 'Общение с единомышленниками и экспертами',
       color: '#EC4899',
-      size: 'small',
     },
     {
       id: 'tutors',
@@ -81,7 +78,6 @@ function App() {
       title: 'Репетиторы',
       description: 'Найди своего учителя для подготовки',
       color: '#F59E0B',
-      size: 'large',
     },
   ]
 
@@ -118,22 +114,20 @@ function App() {
 
       {/* ========== ШАПКА ========== */}
       <header className="header">
-        {/* Левая часть: лого */}
         <div className="header-left">
-          <div className="logo">
+          {/* Логотип тоже ведёт на главную */}
+          <button className="logo logo-button" onClick={goHome}>
             <span className="logo-icon">⚛️</span>
             <span className="logo-text">Физик<span className="logo-accent">ум</span></span>
-          </div>
+          </button>
         </div>
 
-        {/* Центр: навигация */}
         <nav className="header-center">
-          <button className="nav-link nav-active" onClick={() => openModal('Главная')}>
+          <button className="nav-link nav-active" onClick={goHome}>
             Главная
           </button>
         </nav>
 
-        {/* Правая часть: действия */}
         <div className="header-right">
           <button 
             className="theme-toggle"
@@ -160,7 +154,7 @@ function App() {
         </div>
       </header>
 
-      {/* ========== ГЕРОЙ-СЕКЦИЯ ========== */}
+      {/* ========== ГЛАВНЫЙ ЭКРАН ========== */}
       <main className="hero">
         <div className="hero-badge">
           <span className="badge-dot" />
@@ -177,12 +171,12 @@ function App() {
           Место, где физика становится интересной.
         </p>
 
-        {/* BENTO-СЕТКА */}
+        {/* BENTO-СЕТКА: все карточки одинаковые */}
         <div className="bento-grid">
           {cards.map(card => (
             <button
               key={card.id}
-              className={`bento-card bento-${card.size}`}
+              className="bento-card"
               style={{ '--accent': card.color } as React.CSSProperties}
               onClick={() => openModal(card.title)}
             >
