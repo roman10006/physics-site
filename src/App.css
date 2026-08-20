@@ -1126,3 +1126,62 @@ body {
     display: none;
   }
 }
+/* ============ КНОПКИ СОЦСЕТЕЙ (MAX и TELEGRAM) ============ */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  color: white;
+}
+
+.social-max:hover {
+  background: linear-gradient(135deg, #7B3FF2, #E044F5);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(123, 63, 242, 0.4);
+}
+
+.social-tg:hover {
+  background: linear-gradient(135deg, #2AABEE, #229ED9);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
+}
+
+/* ============ СТРАНИЦА НОВОСТЕЙ ============ */
+.news-buttons {
+  margin-bottom: 40px;
+}
+
+.news-list-placeholder {
+  text-align: center;
+  padding: 60px 20px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 24px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.placeholder-emoji {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}

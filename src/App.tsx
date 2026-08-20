@@ -120,7 +120,6 @@ function App() {
     { label: 'О проекте', id: 'about' },
     { label: 'Помощь', id: 'help' },
     { label: 'Контакты', id: 'contacts' },
-    { label: 'Условия использования', id: 'terms' },
   ]
 
   return (
@@ -251,24 +250,7 @@ function App() {
           </h1>
           <p className="page-subtitle">Самое интересное из мира науки</p>
 
-          {/* Главное событие недели */}
-          <article className="main-event-card">
-            <div className="event-badge">🔥 Главное событие недели</div>
-            <h2>Метеорный поток Персеиды — 2026</h2>
-            <p>
-              В середине августа небо подарило всем любителям физики и астрономии 
-              своё главное шоу года — метеорный поток Персеиды. До 100 «падающих звёзд» 
-              в час! Это отличная возможность вспомнить, почему метеоры светятся, 
-              и загадать желание по законам физики. ✨
-            </p>
-            <div className="event-meta">
-              <span>📅 19 августа 2026</span>
-              <span>👁 1 240 просмотров</span>
-              <span>💬 37 обсуждений</span>
-            </div>
-          </article>
-
-          {/* 5 фиолетовых мини-кнопок */}
+          {/* 5 фиолетовых мини-кнопок сверху */}
           <div className="news-buttons">
             {newsButtons.map(btn => (
               <button
@@ -280,6 +262,12 @@ function App() {
                 {btn.label}
               </button>
             ))}
+          </div>
+
+          {/* Сюда добавим список новостей из твоей базы */}
+          <div className="news-list-placeholder">
+            <div className="placeholder-emoji">🗞️</div>
+            <p>Скоро здесь появятся новости — база загружается...</p>
           </div>
         </main>
       )}
@@ -329,6 +317,26 @@ function App() {
                 Сайт про физику для школьников. 
                 Учимся, обсуждаем и влюбляемся в науку вместе.
               </p>
+              
+              {/* Кнопки соцсетей */}
+              <div className="social-buttons">
+                <a 
+                  className="social-btn social-max" 
+                  href="https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <span>💬</span> Физикум в MAX
+                </a>
+                <a 
+                  className="social-btn social-tg" 
+                  href="https://t.me/physicym" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <span>✈️</span> Физикум в Телеграмме
+                </a>
+              </div>
             </div>
             
             <div className="footer-links">
