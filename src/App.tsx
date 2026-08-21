@@ -2,11 +2,59 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 type Page = 'home' | 'news' | 'tutors'
+type NewsCategory = 'all' | 'world' | 'russia' | 'olympiads' | 'events' | 'scientific'
+type SortOrder = 'newest' | 'oldest'
+
+// Тип для новости
+interface NewsItem {
+  id: number
+  title: string
+  date: string
+  image: string
+  shortDescription: string
+  fullDescription: string
+  source: string
+  category: NewsCategory
+}
+
+// БАЗА НОВОСТЕЙ — сюда будем добавлять твои новости
+const newsData: NewsItem[] = [
+  {
+    id: 1,
+    title: 'Пример новости: Россияне создали новый сверхпроводник',
+    date: '2026-08-21',
+    image: '/images/example.jpg',
+    shortDescription: 'Учёные из МГУ разработали материал, работающий при температуре выше −50°C...',
+    fullDescription: 'Это подробное описание новости. Здесь будет полный текст, который раскроется при нажатии кнопки "Читать дальше". Пример новости для демонстрации функционала.',
+    source: 'ТАСС',
+    category: 'russia',
+  },
+  {
+    id: 2,
+    title: 'Пример: Нобелевская премия 2026 за квантовые вычисления',
+    date: '2026-08-20',
+    image: '/images/example.jpg',
+    shortDescription: 'Нобелевская премия по физике 2026 года вручена за прорыв в квантовых технологиях...',
+    fullDescription: 'Полное описание новости о Нобелевской премии. Будет заменено на реальные данные.',
+    source: 'Nature',
+    category: 'world',
+  },
+  {
+    id: 3,
+    title: 'Всероссийская олимпиада по физике 2026',
+    date: '2026-08-15',
+    image: '/images/example.jpg',
+    shortDescription: 'Объявлены даты проведения регионального этапа ВсОШ по физике...',
+    fullDescription: 'Подробности о предстоящей олимпиаде и как к ней готовиться.',
+    source: 'Минобрнауки',
+    category: 'olympiads',
+  },
+]
 
 function App() {
   // === СОСТОЯНИЯ ===
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    return (localStorage.getItem('theme') as 'dark' | 'light') || 'light' // теперь светлая по умолчанию!
+    return (localStorage.getItem('theme') as 'dark' | 'light') || 'light'
   })
   const [page, setPage] = useState<Page>('home')
   const [modalOpen, setModalOpen] = useState(false)
@@ -15,6 +63,11 @@ function App() {
     return localStorage.getItem('cookieAccepted') === 'true'
   })
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
+  
+  // Состояния для новостей
+  const [newsFilter, setNewsFilter] = useState<NewsCategory>('all')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
 
   // === ЭФФЕКТЫ ===
   useEffect(() => {
@@ -32,7 +85,6 @@ function App() {
     setStars(newStars)
   }, [])
 
-  // При смене страницы — скролл наверх
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [page])
@@ -53,6 +105,7 @@ function App() {
   }
 
   const goHome = () => {
+    setSelectedNews(null)
     if (page === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
@@ -60,60 +113,44 @@ function App() {
     }
   }
 
-  // === ДАННЫЕ ===
+  // Фильтрация и сортировка новостей
+  const getFilteredNews = () => {
+    let filtered = newsData
+    if (newsFilter !== 'all') {
+      filtered = filtered.filter(n => n.category === newsFilter)
+    }
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortOrder === 'newest') {
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      }
+      return new Date(a.date).getTime() - new Date(b.date).getTime()
+    })
+    return sorted
+  }
 
-  // Навигация в шапке
+  // === ДАННЫЕ ===
   const navItems = [
     { label: 'Главная', active: page === 'home', action: goHome },
     { label: 'Материалы', active: false, action: () => openModal('Материалы') },
-    { label: 'Новости', active: page === 'news', action: () => setPage('news') },
+    { label: 'Новости', active: page === 'news', action: () => { setPage('news'); setNewsFilter('all'); setSelectedNews(null) } },
     { label: 'Форум', active: false, action: () => openModal('Форум') },
     { label: 'Репетиторы', active: page === 'tutors', action: () => setPage('tutors') },
   ]
 
-  // Карточки на главном экране
   const cards = [
-    {
-      id: 'materials',
-      icon: '📚',
-      title: 'Материалы',
-      description: 'Теория и задачи по всем темам 7-11 классов',
-      color: '#4F7DF5',
-      action: () => openModal('Материалы'),
-    },
-    {
-      id: 'news',
-      icon: '📰',
-      title: 'Новости',
-      description: 'Олимпиады, турниры и события в мире физики',
-      color: '#10B981',
-      action: () => setPage('news'),
-    },
-    {
-      id: 'forum',
-      icon: '💬',
-      title: 'Форум',
-      description: 'Общение с единомышленниками и экспертами',
-      color: '#EC4899',
-      action: () => openModal('Форум'),
-    },
-    {
-      id: 'tutors',
-      icon: '👨‍🏫',
-      title: 'Репетиторы',
-      description: 'Найди своего учителя для подготовки',
-      color: '#F59E0B',
-      action: () => setPage('tutors'),
-    },
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы') },
+    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', action: () => { setPage('news'); setNewsFilter('all'); setSelectedNews(null) } },
+    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
+    { id: 'tutors', icon: '👨‍🏫', title: 'Репетиторы', description: 'Найди своего учителя для подготовки', color: '#F59E0B', action: () => setPage('tutors') },
   ]
 
-  // Фиолетовые мини-кнопки на странице новостей
-  const newsButtons = [
-    { icon: '🌍', label: 'Новости в мире' },
-    { icon: '🇷🇺', label: 'Новости в России' },
-    { icon: '🏆', label: 'Ближайшие олимпиады' },
-    { icon: '📅', label: 'Ближайшие события' },
-    { icon: '✍️', label: 'Написать новость' },
+  // Мини-кнопки фильтров (без "Написать новость" — она теперь отдельная)
+  const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
+    { icon: '🌍', label: 'Новости в мире', category: 'world' },
+    { icon: '🇷🇺', label: 'Новости в России', category: 'russia' },
+    { icon: '🏆', label: 'Ближайшие олимпиады', category: 'olympiads' },
+    { icon: '📅', label: 'Ближайшие события', category: 'events' },
+    { icon: '🔬', label: 'Научные работы', category: 'scientific' },
   ]
 
   const footerLinks = [
@@ -122,31 +159,35 @@ function App() {
     { label: 'Контакты', id: 'contacts' },
   ]
 
+  // Форматирование даты
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  }
+
+  // Категории с названиями
+  const categoryNames: Record<NewsCategory, string> = {
+    all: 'Все новости',
+    world: 'В мире',
+    russia: 'В России',
+    olympiads: 'Олимпиады',
+    events: 'События',
+    scientific: 'Научные работы',
+  }
+
   return (
     <div className="app">
-      {/* ЗВЁЗДЫ НА ФОНЕ */}
       <div className="stars">
         {stars.map((star, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              animationDelay: `${star.delay}s`,
-            }}
-          />
+          <div key={i} className="star" style={{ left: `${star.x}%`, top: `${star.y}%`, width: `${star.size}px`, height: `${star.size}px`, animationDelay: `${star.delay}s` }} />
         ))}
       </div>
 
-      {/* ГРАДИЕНТНЫЕ ПЯТНА */}
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
 
-      {/* ========== ШАПКА (всегда сверху) ========== */}
+      {/* ========== ШАПКА ========== */}
       <header className="header">
         <div className="header-left">
           <button className="logo logo-button" onClick={goHome}>
@@ -155,58 +196,30 @@ function App() {
           </button>
         </div>
 
-        {/* Навигация в линию */}
         <nav className="header-center">
           {navItems.map(item => (
-            <button
-              key={item.label}
-              className={item.active ? 'nav-link nav-active' : 'nav-link'}
-              onClick={item.action}
-            >
+            <button key={item.label} className={item.active ? 'nav-link nav-active' : 'nav-link'} onClick={item.action}>
               {item.label}
             </button>
           ))}
         </nav>
 
         <div className="header-right">
-          {/* Поиск по сайту */}
           <div className="search-box">
             <span className="search-icon">🔍</span>
-            <input
-              className="search-input"
-              placeholder="Поиск по сайту..."
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') openModal('Поиск')
-              }}
-            />
+            <input className="search-input" placeholder="Поиск по сайту..." onKeyDown={(e) => { if (e.key === 'Enter') openModal('Поиск') }} />
           </div>
 
-          <button 
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label="Сменить тему"
-          >
-            <span className="theme-icon">
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </span>
+          <button className="theme-toggle" onClick={toggleTheme} aria-label="Сменить тему">
+            <span className="theme-icon">{theme === 'dark' ? '☀️' : '🌙'}</span>
           </button>
           
-          <button 
-            className="btn btn-ghost"
-            onClick={() => openModal('Вход')}
-          >
-            Вход
-          </button>
-          <button 
-            className="btn btn-primary"
-            onClick={() => openModal('Регистрация')}
-          >
-            Регистрация
-          </button>
+          <button className="btn btn-ghost" onClick={() => openModal('Вход')}>Вход</button>
+          <button className="btn btn-primary" onClick={() => openModal('Регистрация')}>Регистрация</button>
         </div>
       </header>
 
-      {/* ========== ГЛАВНАЯ СТРАНИЦА ========== */}
+      {/* ========== ГЛАВНАЯ ========== */}
       {page === 'home' && (
         <main className="hero">
           <div className="hero-badge">
@@ -226,12 +239,7 @@ function App() {
 
           <div className="bento-grid">
             {cards.map(card => (
-              <button
-                key={card.id}
-                className="bento-card"
-                style={{ '--accent': card.color } as React.CSSProperties}
-                onClick={card.action}
-              >
+              <button key={card.id} className="bento-card" style={{ '--accent': card.color } as React.CSSProperties} onClick={card.action}>
                 <div className="bento-icon">{card.icon}</div>
                 <h3 className="bento-title">{card.title}</h3>
                 <p className="bento-desc">{card.description}</p>
@@ -243,32 +251,127 @@ function App() {
       )}
 
       {/* ========== СТРАНИЦА НОВОСТЕЙ ========== */}
-      {page === 'news' && (
+      {page === 'news' && !selectedNews && (
         <main className="page">
-          <h1 className="page-title">
-            Новости <span className="gradient-text">физики</span>
-          </h1>
+          <div className="news-header-row">
+            <h1 className="page-title">
+              Новости <span className="gradient-text">физики</span>
+            </h1>
+            
+            {/* Кнопка "Написать новость" — отдельно, справа */}
+            <button 
+              className="write-news-btn"
+              onClick={() => openModal('Написать новость')}
+            >
+              <span>✍️</span>
+              Написать новость
+            </button>
+          </div>
+          
           <p className="page-subtitle">Самое интересное из мира науки</p>
 
-          {/* 5 фиолетовых мини-кнопок сверху */}
-          <div className="news-buttons">
-            {newsButtons.map(btn => (
+          {/* Фильтры + сортировка */}
+          <div className="news-toolbar">
+            <div className="news-buttons">
+              {/* Кнопка "Все" */}
               <button
-                key={btn.label}
-                className="mini-btn"
-                onClick={() => openModal(btn.label)}
+                className={`mini-btn ${newsFilter === 'all' ? 'mini-btn-active' : ''}`}
+                onClick={() => setNewsFilter('all')}
               >
-                <span>{btn.icon}</span>
-                {btn.label}
+                <span>📰</span>
+                Все
               </button>
-            ))}
+              
+              {newsButtons.map(btn => (
+                <button
+                  key={btn.label}
+                  className={`mini-btn ${newsFilter === btn.category ? 'mini-btn-active' : ''}`}
+                  onClick={() => setNewsFilter(btn.category)}
+                >
+                  <span>{btn.icon}</span>
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Сортировка */}
+            <button
+              className="sort-btn"
+              onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
+              title={sortOrder === 'newest' ? 'Сначала новые' : 'Сначала старые'}
+            >
+              {sortOrder === 'newest' ? 'Сначала новые' : 'Сначала старые'}
+              <span className="sort-arrow">{sortOrder === 'newest' ? '↓' : '↑'}</span>
+            </button>
           </div>
 
-          {/* Сюда добавим список новостей из твоей базы */}
-          <div className="news-list-placeholder">
-            <div className="placeholder-emoji">🗞️</div>
-            <p>Скоро здесь появятся новости — база загружается...</p>
+          {/* Список новостей */}
+          <div className="news-list">
+            {getFilteredNews().length === 0 ? (
+              <div className="news-empty">
+                <div className="news-empty-emoji">📭</div>
+                <h3>Новостей пока нет</h3>
+                <p>В категории «{categoryNames[newsFilter]}» новостей ещё нет.</p>
+              </div>
+            ) : (
+              getFilteredNews().map(news => (
+                <article key={news.id} className="news-card">
+                  <div className="news-card-image">
+                    <div className="news-image-placeholder">📰</div>
+                  </div>
+                  <div className="news-card-content">
+                    <div className="news-card-meta">
+                      <span className="news-category-badge">{categoryNames[news.category]}</span>
+                      <span className="news-date">{formatDate(news.date)}</span>
+                    </div>
+                    <h2 className="news-card-title">{news.title}</h2>
+                    <p className="news-card-description">{news.shortDescription}</p>
+                    <div className="news-card-footer">
+                      <button 
+                        className="read-more-btn"
+                        onClick={() => setSelectedNews(news)}
+                      >
+                        Читать дальше →
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))
+            )}
           </div>
+        </main>
+      )}
+
+      {/* ========== ПРОСМОТР ОТДЕЛЬНОЙ НОВОСТИ ========== */}
+      {page === 'news' && selectedNews && (
+        <main className="page">
+          <button 
+            className="back-button"
+            onClick={() => setSelectedNews(null)}
+          >
+            ← Назад к списку
+          </button>
+          
+          <article className="news-detail">
+            <div className="news-detail-image">
+              <div className="news-image-placeholder large">📰</div>
+            </div>
+            
+            <div className="news-detail-header">
+              <span className="news-category-badge">{categoryNames[selectedNews.category]}</span>
+              <span className="news-date">{formatDate(selectedNews.date)}</span>
+            </div>
+            
+            <h1 className="news-detail-title">{selectedNews.title}</h1>
+            
+            <div className="news-detail-body">
+              <p>{selectedNews.fullDescription}</p>
+            </div>
+            
+            <div className="news-detail-source">
+              <strong>Источник:</strong> {selectedNews.source}
+            </div>
+          </article>
         </main>
       )}
 
@@ -278,21 +381,14 @@ function App() {
           <div className="empty-state">
             <div className="empty-emoji">🧑‍🏫</div>
             <h2>Пока что репетиторов нет</h2>
-            <p>
-              Но совсем скоро здесь появятся лучшие преподаватели физики! 
-              Хочешь стать первым репетитором Физикума? Напиши нам.
-            </p>
-            <button 
-              className="btn btn-primary btn-large"
-              onClick={() => openModal('Стать репетитором')}
-            >
+            <p>Но совсем скоро здесь появятся лучшие преподаватели физики! Хочешь стать первым репетитором Физикума? Напиши нам.</p>
+            <button className="btn btn-primary btn-large" onClick={() => openModal('Стать репетитором')}>
               Стать репетитором
             </button>
           </div>
         </main>
       )}
 
-      {/* БЕГУЩАЯ СТРОКА НА ВЕСЬ ЭКРАН */}
       <div className="ticker">
         <div className="ticker-content">
           <span>😂 Штирлиц стрелял вслепую. Слепая упала и зашептала «два-девять».</span>
@@ -314,26 +410,14 @@ function App() {
                 <span className="logo-text">Физик<span className="logo-accent">ум</span></span>
               </div>
               <p className="footer-description">
-                Сайт про физику для школьников. 
-                Учимся, обсуждаем и влюбляемся в науку вместе.
+                Сайт про физику для школьников. Учимся, обсуждаем и влюбляемся в науку вместе.
               </p>
               
-              {/* Кнопки соцсетей */}
               <div className="social-buttons">
-                <a 
-                  className="social-btn social-max" 
-                  href="https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
+                <a className="social-btn social-max" href="https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc" target="_blank" rel="noopener noreferrer">
                   <span>💬</span> Физикум в MAX
                 </a>
-                <a 
-                  className="social-btn social-tg" 
-                  href="https://t.me/physicym" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
+                <a className="social-btn social-tg" href="https://t.me/physicym" target="_blank" rel="noopener noreferrer">
                   <span>✈️</span> Физикум в Телеграмме
                 </a>
               </div>
@@ -343,11 +427,7 @@ function App() {
               <div className="footer-column">
                 <h4>Проект</h4>
                 {footerLinks.map(link => (
-                  <button 
-                    key={link.id}
-                    className="footer-link"
-                    onClick={() => openModal(link.label)}
-                  >
+                  <button key={link.id} className="footer-link" onClick={() => openModal(link.label)}>
                     {link.label}
                   </button>
                 ))}
@@ -355,22 +435,13 @@ function App() {
               
               <div className="footer-column">
                 <h4>Документы</h4>
-                <button 
-                  className="footer-link footer-link-soon"
-                  onClick={() => openModal('Пользовательское соглашение')}
-                >
+                <button className="footer-link footer-link-soon" onClick={() => openModal('Пользовательское соглашение')}>
                   Пользовательское соглашение <span className="soon-badge">soon</span>
                 </button>
-                <button 
-                  className="footer-link footer-link-soon"
-                  onClick={() => openModal('Политика конфиденциальности')}
-                >
+                <button className="footer-link footer-link-soon" onClick={() => openModal('Политика конфиденциальности')}>
                   Политика конфиденциальности <span className="soon-badge">soon</span>
                 </button>
-                <button 
-                  className="footer-link footer-link-soon"
-                  onClick={() => openModal('Согласие на обработку ПД')}
-                >
+                <button className="footer-link footer-link-soon" onClick={() => openModal('Согласие на обработку ПД')}>
                   Согласие на обработку ПД <span className="soon-badge">soon</span>
                 </button>
               </div>
@@ -379,38 +450,23 @@ function App() {
           
           <div className="footer-bottom">
             <p>© 2026 Физикум. Все права защищены.</p>
-            <p className="footer-made">
-              Сделано с ❤️ для любителей физики
-            </p>
+            <p className="footer-made">Сделано с ❤️ для любителей физики</p>
           </div>
         </div>
       </footer>
 
-      {/* ========== COOKIE-УВЕДОМЛЕНИЕ ========== */}
+      {/* ========== COOKIE ========== */}
       {!cookieAccepted && (
         <div className="cookie-banner">
           <div className="cookie-content">
             <div className="cookie-icon">🍪</div>
             <div className="cookie-text">
               <strong>Мы используем cookie</strong>
-              <p>
-                Мы используем cookie и сервисы статистики для улучшения работы сайта. 
-                Продолжая пользоваться сайтом, вы соглашаетесь с этим.
-              </p>
+              <p>Мы используем cookie и сервисы статистики для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с этим.</p>
             </div>
             <div className="cookie-actions">
-              <button 
-                className="btn btn-ghost btn-small"
-                onClick={() => openModal('Условия использования')}
-              >
-                Подробнее
-              </button>
-              <button 
-                className="btn btn-primary btn-small"
-                onClick={acceptCookies}
-              >
-                Принять
-              </button>
+              <button className="btn btn-ghost btn-small" onClick={() => openModal('Условия использования')}>Подробнее</button>
+              <button className="btn btn-primary btn-small" onClick={acceptCookies}>Принять</button>
             </div>
           </div>
         </div>
@@ -420,12 +476,7 @@ function App() {
       {modalOpen && (
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close"
-              onClick={() => setModalOpen(false)}
-            >
-              ✕
-            </button>
+            <button className="modal-close" onClick={() => setModalOpen(false)}>✕</button>
             
             <div className="modal-emoji">🥺</div>
             <h2 className="modal-title">Пока что нету :(</h2>
@@ -433,9 +484,7 @@ function App() {
               Раздел <span className="highlight">«{modalType}»</span> появится, 
               когда я заработаю <span className="highlight">500 рублей</span> на VPS-сервер.
             </p>
-            <p className="modal-subtext">
-              Но ты можешь помочь — расскажи про сайт друзьям!
-            </p>
+            <p className="modal-subtext">Но ты можешь помочь — расскажи про сайт друзьям!</p>
             
             <div className="modal-goal">
               <div className="goal-bar">
@@ -447,10 +496,7 @@ function App() {
               </div>
             </div>
 
-            <button 
-              className="btn btn-primary btn-large"
-              onClick={() => setModalOpen(false)}
-            >
+            <button className="btn btn-primary btn-large" onClick={() => setModalOpen(false)}>
               Понял, жду запуска!
             </button>
           </div>
