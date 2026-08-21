@@ -5,7 +5,100 @@ type Page = 'home' | 'news' | 'tutors'
 type NewsCategory = 'all' | 'world' | 'russia' | 'olympiads' | 'events' | 'scientific'
 type SortOrder = 'newest' | 'oldest'
 
-// Тип для новости
+// Список регионов России
+const regions = [
+  'Без региона',
+  'Республика Адыгея',
+  'Республика Башкортостан',
+  'Республика Бурятия',
+  'Республика Алтай',
+  'Республика Дагестан',
+  'Республика Ингушетия',
+  'Кабардино-Балкарская Республика',
+  'Республика Калмыкия',
+  'Карачаево-Черкесская Республика',
+  'Республика Карелия',
+  'Республика Коми',
+  'Республика Марий Эл',
+  'Республика Мордовия',
+  'Республика Саха (Якутия)',
+  'Республика Северная Осетия - Алания',
+  'Республика Татарстан',
+  'Республика Тыва',
+  'Удмуртская Республика',
+  'Республика Хакасия',
+  'Чеченская Республика',
+  'Чувашская Республика - Чувашия',
+  'Алтайский край',
+  'Краснодарский край',
+  'Красноярский край',
+  'Приморский край',
+  'Ставропольский край',
+  'Хабаровский край',
+  'Амурская область',
+  'Архангельская область',
+  'Астраханская область',
+  'Белгородская область',
+  'Брянская область',
+  'Владимирская область',
+  'Волгоградская область',
+  'Вологодская область',
+  'Воронежская область',
+  'Ивановская область',
+  'Иркутская область',
+  'Калининградская область',
+  'Калужская область',
+  'Камчатский край',
+  'Кемеровская область',
+  'Кировская область',
+  'Костромская область',
+  'Курганская область',
+  'Курская область',
+  'Ленинградская область',
+  'Липецкая область',
+  'Магаданская область',
+  'Московская область',
+  'Мурманская область',
+  'Нижегородская область',
+  'Новгородская область',
+  'Новосибирская область',
+  'Омская область',
+  'Оренбургская область',
+  'Орловская область',
+  'Пензенская область',
+  'Пермский край',
+  'Псковская область',
+  'Ростовская область',
+  'Рязанская область',
+  'Самарская область',
+  'Саратовская область',
+  'Сахалинская область',
+  'Свердловская область',
+  'Смоленская область',
+  'Тамбовская область',
+  'Тверская область',
+  'Томская область',
+  'Тульская область',
+  'Тюменская область',
+  'Ульяновская область',
+  'Челябинская область',
+  'Забайкальский край',
+  'Ярославская область',
+  'г. Москва',
+  'г. Санкт-Петербург',
+  'Еврейская автономная область',
+  'Ненецкий автономный округ',
+  'Ханты-Мансийский АО - Югра',
+  'Чукотский автономный округ',
+  'Ямало-Ненецкий автономный округ',
+  'Республика Крым',
+  'г. Севастополь',
+  'Запорожская область',
+  'Донецкая Народная Республика',
+  'Луганская Народная Республика',
+  'Херсонская область',
+]
+
 interface NewsItem {
   id: number
   title: string
@@ -15,6 +108,8 @@ interface NewsItem {
   fullDescription: string
   source: string
   category: NewsCategory
+  city?: string
+  region?: string
 }
 
 // БАЗА НОВОСТЕЙ — сюда будем добавлять твои новости
@@ -68,6 +163,8 @@ function App() {
   const [newsFilter, setNewsFilter] = useState<NewsCategory>('all')
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
+  const [selectedRegion, setSelectedRegion] = useState<string>('Без региона')
+  const [showRegionSelector, setShowRegionSelector] = useState(false)
 
   // === ЭФФЕКТЫ ===
   useEffect(() => {
@@ -113,20 +210,41 @@ function App() {
     }
   }
 
-  // Фильтрация и сортировка новостей
-  const getFilteredNews = () => {
-    let filtered = newsData
-    if (newsFilter !== 'all') {
-      filtered = filtered.filter(n => n.category === newsFilter)
-    }
-    const sorted = [...filtered].sort((a, b) => {
-      if (sortOrder === 'newest') {
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
-      }
-      return new Date(a.date).getTime() - new Date(b.date).getTime()
-    })
-    return sorted
+ const getFilteredNews = () => {
+  let filtered = newsData
+  if (newsFilter !== 'all') {
+    filtered = filtered.filter(n => n.category === newsFilter)
   }
+  
+  // Если выбраны "События" и выбран регион — сначала события региона, потом остальные
+  if (newsFilter === 'events' && selectedRegion !== 'Без региона') {
+    const regionEvents = filtered.filter(n => n.region === selectedRegion)
+    const otherEvents = filtered.filter(n => n.region !== selectedRegion)
+    filtered = [...regionEvents, ...otherEvents]
+  }
+  
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortOrder === 'newest') {
+      return new Date(b.date).getTime() - new Date(a.date).getTime()
+    }
+    return new Date(a.date).getTime() - new Date(b.date).getTime()
+  })
+  return sorted
+}
+
+// Переключение фильтра с возможностью сброса
+const toggleFilter = (category: NewsCategory) => {
+  if (newsFilter === category) {
+    setNewsFilter('all') // Повторный клик = сброс
+  } else {
+    setNewsFilter(category)
+    if (category === 'events') {
+      setShowRegionSelector(true)
+    } else {
+      setShowRegionSelector(false)
+    }
+  }
+}
 
   // === ДАННЫЕ ===
   const navItems = [
@@ -144,14 +262,13 @@ function App() {
     { id: 'tutors', icon: '👨‍🏫', title: 'Репетиторы', description: 'Найди своего учителя для подготовки', color: '#F59E0B', action: () => setPage('tutors') },
   ]
 
-  // Мини-кнопки фильтров (без "Написать новость" — она теперь отдельная)
-  const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
-    { icon: '🌍', label: 'Новости в мире', category: 'world' },
-    { icon: '🇷🇺', label: 'Новости в России', category: 'russia' },
-    { icon: '🏆', label: 'Ближайшие олимпиады', category: 'olympiads' },
-    { icon: '📅', label: 'Ближайшие события', category: 'events' },
-    { icon: '🔬', label: 'Научные работы', category: 'scientific' },
-  ]
+const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
+  { icon: '🌍', label: 'Новости в мире', category: 'world' },
+  { icon: '🇷🇺', label: 'Новости в России', category: 'russia' },
+  { icon: '🏆', label: 'Ближайшие олимпиады', category: 'olympiads' },
+  { icon: '📅', label: 'Ближайшие события', category: 'events' },
+  { icon: '🔬', label: 'Научные работы', category: 'scientific' },
+]
 
   const footerLinks = [
     { label: 'О проекте', id: 'about' },
@@ -257,9 +374,8 @@ function App() {
             <h1 className="page-title">
               Новости <span className="gradient-text">физики</span>
             </h1>
-            
-            {/* Кнопка "Написать новость" — отдельно, справа */}
-            <button 
+
+            <button
               className="write-news-btn"
               onClick={() => openModal('Написать новость')}
             >
@@ -267,26 +383,17 @@ function App() {
               Написать новость
             </button>
           </div>
-          
+
           <p className="page-subtitle">Самое интересное из мира науки</p>
 
           {/* Фильтры + сортировка */}
           <div className="news-toolbar">
             <div className="news-buttons">
-              {/* Кнопка "Все" */}
-              <button
-                className={`mini-btn ${newsFilter === 'all' ? 'mini-btn-active' : ''}`}
-                onClick={() => setNewsFilter('all')}
-              >
-                <span>📰</span>
-                Все
-              </button>
-              
               {newsButtons.map(btn => (
                 <button
                   key={btn.label}
                   className={`mini-btn ${newsFilter === btn.category ? 'mini-btn-active' : ''}`}
-                  onClick={() => setNewsFilter(btn.category)}
+                  onClick={() => toggleFilter(btn.category)}
                 >
                   <span>{btn.icon}</span>
                   {btn.label}
@@ -294,7 +401,6 @@ function App() {
               ))}
             </div>
 
-            {/* Сортировка */}
             <button
               className="sort-btn"
               onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
@@ -305,38 +411,114 @@ function App() {
             </button>
           </div>
 
+          {/* Выбор региона для "Событий" */}
+          {newsFilter === 'events' && (
+            <div className="region-selector">
+              <label className="region-label">📍 Пожалуйста, выберите свой регион:</label>
+              <select
+                className="region-select"
+                value={selectedRegion}
+                onChange={(e) => setSelectedRegion(e.target.value)}
+              >
+                <option value="Без региона">Без региона (показать все)</option>
+                {regions.slice(1).map(region => (
+                  <option key={region} value={region}>{region}</option>
+                ))}
+                <option value="__no_list">Нет в списке</option>
+              </select>
+            </div>
+          )}
+
           {/* Список новостей */}
           <div className="news-list">
-            {getFilteredNews().length === 0 ? (
+            {newsFilter === 'scientific' ? (
+              /* === НАУЧНЫЕ РАБОТЫ: ЗАГЛУШКА === */
+              <div className="scientific-empty">
+                <div className="scientific-emoji">🔬</div>
+                <h2>Научных работ пока нет</h2>
+                <p>
+                  Но скоро они появятся! Здесь будут публиковаться исследовательские
+                  работы школьников и студентов по физике.
+                </p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => openModal('Добавить научную работу')}
+                >
+                  Добавить свою работу
+                </button>
+              </div>
+            ) : getFilteredNews().length === 0 ? (
               <div className="news-empty">
                 <div className="news-empty-emoji">📭</div>
                 <h3>Новостей пока нет</h3>
                 <p>В категории «{categoryNames[newsFilter]}» новостей ещё нет.</p>
               </div>
             ) : (
-              getFilteredNews().map(news => (
-                <article key={news.id} className="news-card">
-                  <div className="news-card-image">
-                    <div className="news-image-placeholder">📰</div>
-                  </div>
-                  <div className="news-card-content">
-                    <div className="news-card-meta">
-                      <span className="news-category-badge">{categoryNames[news.category]}</span>
-                      <span className="news-date">{formatDate(news.date)}</span>
+              <>
+                {/* Баннер, если в выбранном регионе событий нет */}
+                {newsFilter === 'events' &&
+                  selectedRegion !== 'Без региона' &&
+                  selectedRegion !== '__no_list' &&
+                  getFilteredNews().filter(n => n.region === selectedRegion).length === 0 && (
+                    <div className="region-empty-banner">
+                      <span className="region-empty-icon">🗺️</span>
+                      <p><strong>В вашем регионе событий нет.</strong></p>
+                      <p>Ниже показаны события из других регионов:</p>
                     </div>
-                    <h2 className="news-card-title">{news.title}</h2>
-                    <p className="news-card-description">{news.shortDescription}</p>
-                    <div className="news-card-footer">
-                      <button 
-                        className="read-more-btn"
-                        onClick={() => setSelectedNews(news)}
-                      >
-                        Читать дальше →
-                      </button>
+                  )}
+
+                {getFilteredNews().map((news, index) => {
+                  const isEventsWithRegion =
+                    newsFilter === 'events' &&
+                    selectedRegion !== 'Без региона' &&
+                    selectedRegion !== '__no_list'
+                  const regionCount = isEventsWithRegion
+                    ? getFilteredNews().filter(n => n.region === selectedRegion).length
+                    : 0
+                  const showSeparator =
+                    isEventsWithRegion && regionCount > 0 && index === regionCount
+
+                  return (
+                    <div key={news.id}>
+                      {showSeparator && (
+                        <div className="region-separator">
+                          <span>📍 Другие регионы</span>
+                        </div>
+                      )}
+
+                      <article className="news-card">
+                        <div className="news-card-image">
+                          {news.image ? (
+                            <img src={news.image} alt={news.title} className="news-img" />
+                          ) : (
+                            <div className="news-image-placeholder">📰</div>
+                          )}
+                        </div>
+                        <div className="news-card-content">
+                          <div className="news-card-meta">
+                            <span className="news-date">{formatDate(news.date)}</span>
+                            {news.city && news.region && (
+                              <span className="news-location">
+                                📍 {news.city}, {news.region}
+                              </span>
+                            )}
+                          </div>
+                          <h2 className="news-card-title">{news.title}</h2>
+                          <p className="news-card-description">{news.shortDescription}</p>
+                          <div className="news-card-footer">
+                            <button
+                              className="read-more-btn"
+                              onClick={() => setSelectedNews(news)}
+                            >
+                              Читать дальше →
+                            </button>
+                          </div>
+                        </div>
+                      </article>
                     </div>
-                  </div>
-                </article>
-              ))
+                  )
+                })}
+              </>
             )}
           </div>
         </main>
@@ -345,29 +527,41 @@ function App() {
       {/* ========== ПРОСМОТР ОТДЕЛЬНОЙ НОВОСТИ ========== */}
       {page === 'news' && selectedNews && (
         <main className="page">
-          <button 
+          <button
             className="back-button"
             onClick={() => setSelectedNews(null)}
           >
             ← Назад к списку
           </button>
-          
+
           <article className="news-detail">
             <div className="news-detail-image">
-              <div className="news-image-placeholder large">📰</div>
+              {selectedNews.image ? (
+                <img
+                  src={selectedNews.image}
+                  alt={selectedNews.title}
+                  className="news-img large"
+                />
+              ) : (
+                <div className="news-image-placeholder large">📰</div>
+              )}
             </div>
-            
+
             <div className="news-detail-header">
-              <span className="news-category-badge">{categoryNames[selectedNews.category]}</span>
               <span className="news-date">{formatDate(selectedNews.date)}</span>
+              {selectedNews.city && selectedNews.region && (
+                <span className="news-location">
+                  📍 {selectedNews.city}, {selectedNews.region}
+                </span>
+              )}
             </div>
-            
+
             <h1 className="news-detail-title">{selectedNews.title}</h1>
-            
+
             <div className="news-detail-body">
               <p>{selectedNews.fullDescription}</p>
             </div>
-            
+
             <div className="news-detail-source">
               <strong>Источник:</strong> {selectedNews.source}
             </div>
