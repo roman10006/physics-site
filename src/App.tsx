@@ -231,8 +231,6 @@ function App() {
   return sorted
 }
 
-const toggleFilter = (category: NewsCategory) => {
-}
   // === ДАННЫЕ ===
   const navItems = [
     { label: 'Главная', active: page === 'home', action: goHome },
@@ -380,7 +378,6 @@ const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
                 <button
                   key={btn.label}
                   className={`mini-btn ${newsFilter === btn.category ? 'mini-btn-active' : ''}`}
-                  onClick={() => toggleFilter(btn.category)}
                 >
                   <span>{btn.icon}</span>
                   {btn.label}
