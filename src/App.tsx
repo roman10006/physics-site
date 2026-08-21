@@ -164,7 +164,6 @@ function App() {
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null)
   const [selectedRegion, setSelectedRegion] = useState<string>('Без региона')
-  const [showRegionSelector, setShowRegionSelector] = useState(false)
 
   // === ЭФФЕКТЫ ===
   useEffect(() => {
@@ -232,20 +231,8 @@ function App() {
   return sorted
 }
 
-// Переключение фильтра с возможностью сброса
 const toggleFilter = (category: NewsCategory) => {
-  if (newsFilter === category) {
-    setNewsFilter('all') // Повторный клик = сброс
-  } else {
-    setNewsFilter(category)
-    if (category === 'events') {
-      setShowRegionSelector(true)
-    } else {
-      setShowRegionSelector(false)
-    }
-  }
 }
-
   // === ДАННЫЕ ===
   const navItems = [
     { label: 'Главная', active: page === 'home', action: goHome },
