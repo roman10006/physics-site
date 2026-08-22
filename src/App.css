@@ -1424,6 +1424,7 @@ body {
   transform: translateX(-4px);
 }
 
+/* ============ ПОЛНАЯ НОВОСТЬ (без фото сверху) ============ */
 .news-detail {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -1431,49 +1432,92 @@ body {
   overflow: hidden;
 }
 
-.news-detail-image {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
-  padding: 60px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .news-detail-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 24px 40px 0;
+  gap: 16px;
+  padding: 32px 40px 0;
+  flex-wrap: wrap;
+}
+
+/* Более заметная дата */
+.news-date-large {
+  color: var(--accent-blue);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  background: rgba(79, 125, 245, 0.1);
+  border-radius: 100px;
+  border: 1px solid rgba(79, 125, 245, 0.3);
 }
 
 .news-detail-title {
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
   font-weight: 800;
-  padding: 16px 40px;
+  padding: 20px 40px;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .news-detail-body {
-  padding: 0 40px 24px;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  padding: 16px 40px 32px;
+  font-size: 1.15rem;
+  line-height: 1.9;
   color: var(--text-secondary);
 }
 
 .news-detail-body p {
   white-space: pre-wrap;
+  margin-bottom: 20px;
+  font-size: 1.15rem;
+  line-height: 1.9;
 }
 
 .news-detail-source {
   padding: 24px 40px;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .news-detail-source strong {
   color: var(--text-secondary);
+}
+
+/* ============ ФОТО ВНУТРИ НОВОСТИ ============ */
+.news-figure {
+  margin: 32px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.news-figure img {
+  width: 100%;
+  display: block;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.news-figure figcaption {
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Ссылка на источник */
+.news-detail-source a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  word-break: break-all;
+  font-weight: 500;
+}
+
+.news-detail-source a:hover {
+  text-decoration: underline;
 }
 
 /* Адаптив */

@@ -118,7 +118,7 @@ const newsData: NewsItem[] = [
   {
     id: 1,
     title: 'Управляемый квантовый мир',
-    date: '2026-08-22',
+    date: '2026-08-22 16:50',
     image: '/images/RAN.jpg',
     images: ['/images/RAN.jpg', '/images/RAN-2.jpg'],
     shortDescription: 'Физики из Австралии, России и Великобритании создали искусственный двумерный электростатический кристалл',
@@ -562,9 +562,10 @@ function App() {
                     <article className="news-card">
                       <div className="news-card-image" style={{ position: 'relative' }}>
                         <div className="news-image-placeholder">📰</div>
-                        {news.image && (
+                        {/* Показываем второе фото если есть, иначе первое */}
+                        {(news.images?.[1] || news.image) && (
                           <img
-                            src={news.image}
+                            src={news.images?.[1] || news.image}
                             alt={news.title}
                             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -603,21 +604,9 @@ function App() {
           </button>
 
           <article className="news-detail">
-            <div className="news-detail-image" style={{ position: 'relative' }}>
-              <div className="news-image-placeholder large">📰</div>
-              {selectedNews.image && (
-                <img
-                  src={selectedNews.image}
-                  alt={selectedNews.title}
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => { e.currentTarget.style.display = 'none' }}
-                />
-              )}
-            </div>
-
-            {/* Без фиолетового бейджа — только дата и место */}
+            {/* Без фото сверху — только дата и место */}
             <div className="news-detail-header">
-              <span className="news-date">{formatDate(selectedNews.date)}</span>
+              <span className="news-date-large">{formatDate(selectedNews.date)}</span>
               {selectedNews.city && selectedNews.region && (
                 <span className="news-location">📍 {selectedNews.city}, {selectedNews.region}</span>
               )}
