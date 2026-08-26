@@ -329,7 +329,7 @@ const Header = ({
 // ============================================
 // ГЛАВНАЯ СТРАНИЦА
 // ============================================
-const HomePage = ({ openModal }: { openModal: (t: string) => void }) => {
+const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; openSocial: (p: 'max' | 'tg') => void }) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
 
   const cards = [
@@ -383,6 +383,19 @@ const HomePage = ({ openModal }: { openModal: (t: string) => void }) => {
             </button>
           )
         })}
+      </div>
+
+      {/* МЫ В СОЦСЕТЯХ — видное место на главной */}
+      <div className="social-section">
+        <h3 className="social-section-title">Мы в соцсетях</h3>
+        <div className="social-buttons">
+          <button className="social-btn social-max" onClick={() => openSocial('max')}>
+            <span>💬</span> Физикум в MAX
+          </button>
+          <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
+            <span>✈️</span> Физикум в Телеграм
+          </button>
+        </div>
       </div>
     </main>
   )
@@ -907,108 +920,7 @@ const ConsentPage = () => {
   )
 }
 
-// ============================================
-// КНОПКИ СОЦСЕТЕЙ С МЕНЮ
-// ============================================
-const SocialButtons = () => {
-  const [openMenu, setOpenMenu] = useState<'max' | 'tg' | null>(null)
-  const [copied, setCopied] = useState<string | null>(null)
 
-  const socialLinks = {
-    max: 'https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc',
-    tg: 'https://t.me/physicym',
-  }
-
-  const copyToClipboard = async (text: string, platform: 'max' | 'tg') => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(platform)
-      setTimeout(() => setCopied(null), 2000)
-      setOpenMenu(null)
-    } catch (err) {
-      console.error('Ошибка копирования:', err)
-    }
-  }
-
-  const openLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer')
-    setOpenMenu(null)
-  }
-
-  return (
-    <>
-      <div className="social-buttons-wrapper">
-        <h4 className="social-title">Присоединяйтесь к нам</h4>
-        <div className="social-buttons">
-          {/* MAX */}
-          <div className="social-button-container">
-            <button
-              className="social-btn social-max"
-              onClick={() => setOpenMenu(openMenu === 'max' ? null : 'max')}
-            >
-              <span>💬</span>
-              Физикум в MAX
-              <span className="dropdown-arrow">{openMenu === 'max' ? '▲' : '▼'}</span>
-            </button>
-            
-            {openMenu === 'max' && (
-              <div className="social-dropdown">
-                <button
-                  className="social-dropdown-item"
-                  onClick={() => copyToClipboard(socialLinks.max, 'max')}
-                >
-                  📋 Скопировать ссылку
-                  {copied === 'max' && <span className="copied-badge">✓ Скопировано!</span>}
-                </button>
-                <button
-                  className="social-dropdown-item"
-                  onClick={() => openLink(socialLinks.max)}
-                >
-                  🔗 Перейти по ссылке
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Telegram */}
-          <div className="social-button-container">
-            <button
-              className="social-btn social-tg"
-              onClick={() => setOpenMenu(openMenu === 'tg' ? null : 'tg')}
-            >
-              <span>✈️</span>
-              Физикум в Телеграм
-              <span className="dropdown-arrow">{openMenu === 'tg' ? '▲' : '▼'}</span>
-            </button>
-            
-            {openMenu === 'tg' && (
-              <div className="social-dropdown">
-                <button
-                  className="social-dropdown-item"
-                  onClick={() => copyToClipboard(socialLinks.tg, 'tg')}
-                >
-                  📋 Скопировать ссылку
-                  {copied === 'tg' && <span className="copied-badge">✓ Скопировано!</span>}
-                </button>
-                <button
-                  className="social-dropdown-item"
-                  onClick={() => openLink(socialLinks.tg)}
-                >
-                  🔗 Перейти по ссылке
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Клик вне меню закрывает его */}
-      {openMenu && (
-        <div className="social-backdrop" onClick={() => setOpenMenu(null)} />
-      )}
-    </>
-  )
-}
 
 // ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
@@ -1026,7 +938,8 @@ const AppContent = () => {
     return localStorage.getItem('cookieAccepted') === 'true'
   })
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
-
+  const [socialModal, setSocialModal] = useState<'max' | 'tg' | null>(null)
+  const [socialCopied, setSocialCopied] = useState(false)
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
@@ -1048,7 +961,30 @@ const AppContent = () => {
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   const openModal = (type: string) => { setModalType(type); setModalOpen(true) }
   const acceptCookies = () => { setCookieAccepted(true); localStorage.setItem('cookieAccepted', 'true') }
+  const socialLinks = {
+    max: { url: 'https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc', name: 'Физикум в MAX', icon: '💬' },
+    tg: { url: 'https://t.me/physicym', name: 'Физикум в Телеграм', icon: '✈️' },
+  }
 
+  const openSocial = (platform: 'max' | 'tg') => {
+    setSocialCopied(false)
+    setSocialModal(platform)
+  }
+
+  const copySocialLink = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = url
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+    setSocialCopied(true)
+    setTimeout(() => setSocialCopied(false), 2000)
+  }
   return (
     <div className="app">
       {/* ЗВЁЗДЫ НА ФОНЕ */}
@@ -1075,7 +1011,7 @@ const AppContent = () => {
       />
 
       <Routes>
-        <Route path="/" element={<HomePage openModal={openModal} />} />
+        <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:id" element={<NewsDetailPage />} />
         <Route path="/tutors" element={<TutorsPage openModal={openModal} />} />
@@ -1116,7 +1052,6 @@ const AppContent = () => {
                 <span className="logo-text">Физик<span className="logo-accent">ум</span></span>
               </div>
               <p className="footer-description">Сайт про физику для школьников. Учимся, обсуждаем и влюбляемся в науку вместе.</p>
-              <SocialButtons />
             </div>
 
             <div className="footer-links">
@@ -1147,7 +1082,34 @@ const AppContent = () => {
         onAccept={acceptCookies}
         onMore={() => navigate('/privacy')}
       />
-
+      {/* МАЛЕНЬКОЕ ОКНО СОЦСЕТЕЙ */}
+      {socialModal && (
+        <div className="modal-overlay" onClick={() => setSocialModal(null)}>
+          <div className="social-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSocialModal(null)}>✕</button>
+            <div className="social-modal-icon">{socialLinks[socialModal].icon}</div>
+            <h3 className="social-modal-title">{socialLinks[socialModal].name}</h3>
+            <p className="social-modal-hint">Нажми на ссылку, чтобы скопировать её:</p>
+            <button
+              className="social-link-box"
+              onClick={() => copySocialLink(socialLinks[socialModal].url)}
+            >
+              {socialLinks[socialModal].url}
+              <span className={`social-copy-icon ${socialCopied ? 'copied' : ''}`}>
+                {socialCopied ? '✓ Скопировано!' : '📋'}
+              </span>
+            </button>
+            <a
+              className="btn btn-primary btn-large"
+              href={socialLinks[socialModal].url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Перейти на канал
+            </a>
+          </div>
+        </div>
+      )}
       <Modal open={modalOpen} type={modalType} onClose={() => setModalOpen(false)} />
     </div>
   )
