@@ -217,11 +217,6 @@ const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
   { icon: '🔬', label: 'Научные работы', category: 'scientific' },
 ]
 
-const footerLinks = [
-  { label: 'О проекте', id: 'about' },
-  { label: 'Помощь', id: 'help' },
-  { label: 'Контакты', id: 'contacts' },
-]
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr)
@@ -304,7 +299,7 @@ const Header = ({
         <button className="nav-link" onClick={() => openModal('Материалы')}>Материалы</button>
         <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <button className="nav-link" onClick={() => openModal('Форум')}>Форум</button>
-        <Link className={`nav-link ${isActive('/tutors') ? 'nav-active' : ''}`} to="/tutors">Репетиторы</Link>
+        <Link className={`nav-link ${isActive('/services') ? 'nav-active' : ''}`} to="/services">Услуги</Link>
       </nav>
 
       <div className="header-right">
@@ -336,7 +331,7 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
     { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы'), link: '' },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', action: () => {}, link: '/news' },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум'), link: '' },
-    { id: 'tutors', icon: '👨‍', title: 'Репетиторы', description: 'Найди своего учителя для подготовки', color: '#F59E0B', action: () => {}, link: '/tutors' },
+    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
   ]
 
   return (
@@ -613,17 +608,96 @@ const NewsDetailPage = () => {
 // ============================================
 // РЕПЕТИТОРЫ
 // ============================================
-const TutorsPage = ({ openModal }: { openModal: (t: string) => void }) => {
-  useEffect(() => { document.title = 'Репетиторы — Физикум' }, [])
+// ============================================
+// УСЛУГИ (репетиторы и т.д.)
+// ============================================
+const ServicesPage = ({ openModal }: { openModal: (t: string) => void }) => {
+  useEffect(() => { document.title = 'Услуги — Физикум' }, [])
   return (
     <main className="page">
       <div className="empty-state">
-        <div className="empty-emoji">🧑‍</div>
-        <h2>Пока что репетиторов нет</h2>
-        <p>Но совсем скоро здесь появятся лучшие преподаватели физики! Хочешь стать первым репетитором Физикума? Напиши нам.</p>
+        <div className="empty-emoji">💼</div>
+        <h2>Услуги скоро появятся</h2>
+        <p>
+          Здесь будут репетиторы, подготовка к олимпиадам и другие услуги.
+          Хочешь стать нашим первым репетитором? Напиши нам!
+        </p>
         <button className="btn btn-primary btn-large" onClick={() => openModal('Стать репетитором')}>
           Стать репетитором
         </button>
+      </div>
+    </main>
+  )
+}
+
+// ============================================
+// КОНТАКТЫ
+// ============================================
+const ContactsPage = () => {
+  const navigate = useNavigate()
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => { document.title = 'Контакты — Физикум' }, [])
+
+  const copyUsername = async () => {
+    try {
+      await navigator.clipboard.writeText('@Fababab')
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = '@Fababab'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <main className="page">
+      <button className="back-button" onClick={() => navigate(-1)}>← Назад</button>
+
+      <h1 className="page-title">Контакты</h1>
+      <p className="page-subtitle">Мы всегда на связи!</p>
+
+      <div className="contacts-grid">
+        {/* Телеграм */}
+        <div className="contact-card">
+          <div className="contact-icon">✈️</div>
+          <h3>Написать в Телеграм</h3>
+          <p className="contact-desc">Самый быстрый способ связаться</p>
+          <button className="contact-username" onClick={copyUsername}>
+            @Fababab
+            <span className={`social-copy-icon ${copied ? 'copied' : ''}`}>
+              {copied ? '✓ Скопировано!' : '📋'}
+            </span>
+          </button>
+          <a
+            className="btn btn-primary"
+            href="https://t.me/Fababab"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Написать
+          </a>
+        </div>
+
+        {/* Почта для информации и помощи */}
+        <div className="contact-card contact-card-soon">
+          <div className="contact-icon">📮</div>
+          <h3>Для информации и помощи</h3>
+          <p className="contact-desc">Вопросы по сайту и материалам</p>
+          <div className="contact-soon-badge">Почта появится скоро</div>
+        </div>
+
+        {/* Почта для сотрудничества */}
+        <div className="contact-card contact-card-soon">
+          <div className="contact-icon">🤝</div>
+          <h3>Для сотрудничества</h3>
+          <p className="contact-desc">Репетиторам, партнёрам и СМИ</p>
+          <div className="contact-soon-badge">Почта появится скоро</div>
+        </div>
       </div>
     </main>
   )
@@ -1014,7 +1088,8 @@ const AppContent = () => {
         <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:id" element={<NewsDetailPage />} />
-        <Route path="/tutors" element={<TutorsPage openModal={openModal} />} />
+        <Route path="/services" element={<ServicesPage openModal={openModal} />} />
+        <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/consent" element={<ConsentPage />} />
@@ -1057,9 +1132,8 @@ const AppContent = () => {
             <div className="footer-links">
               <div className="footer-column">
                 <h4>Проект</h4>
-                {footerLinks.map(link => (
-                  <button key={link.id} className="footer-link" onClick={() => openModal(link.label)}>{link.label}</button>
-                ))}
+                <button className="footer-link" onClick={() => openModal('О проекте')}>О проекте</button>
+                <Link className="footer-link" to="/contacts">Контакты</Link>
               </div>
               <div className="footer-column">
                 <h4>Документы</h4>
