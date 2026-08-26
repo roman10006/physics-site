@@ -1127,27 +1127,50 @@ body {
   }
 }
 /* ============ КНОПКИ СОЦСЕТЕЙ (MAX и TELEGRAM) ============ */
+.social-buttons-wrapper {
+  margin-top: 28px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(236, 72, 153, 0.05));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.social-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
 .social-buttons {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 20px;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.social-button-container {
+  position: relative;
 }
 
 .social-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 10px 18px;
+  padding: 14px 20px;
   border-radius: 12px;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
   transition: var(--transition);
   border: 1px solid var(--border);
   color: var(--text-primary);
   background: var(--bg-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
 }
 
 .social-btn:hover {
@@ -1165,6 +1188,104 @@ body {
   background: linear-gradient(135deg, #2AABEE, #229ED9);
   border-color: transparent;
   box-shadow: 0 8px 24px rgba(42, 171, 238, 0.4);
+}
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  margin-left: auto;
+  opacity: 0.7;
+}
+
+/* Выпадающее меню */
+.social-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  animation: dropdownSlide 0.2s ease;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.social-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: var(--transition);
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.social-dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
+.copied-badge {
+  margin-left: auto;
+  background: var(--accent-green);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Backdrop для закрытия меню */
+.social-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  cursor: default;
+}
+
+/* Адаптив для соцсетей */
+@media (max-width: 768px) {
+  .social-buttons-wrapper {
+    padding: 20px 16px;
+  }
+  
+  .social-btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .social-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
 }
 
 /* ============ СТРАНИЦА НОВОСТЕЙ ============ */
