@@ -908,6 +908,109 @@ const ConsentPage = () => {
 }
 
 // ============================================
+// КНОПКИ СОЦСЕТЕЙ С МЕНЮ
+// ============================================
+const SocialButtons = () => {
+  const [openMenu, setOpenMenu] = useState<'max' | 'tg' | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
+
+  const socialLinks = {
+    max: 'https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc',
+    tg: 'https://t.me/physicym',
+  }
+
+  const copyToClipboard = async (text: string, platform: 'max' | 'tg') => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(platform)
+      setTimeout(() => setCopied(null), 2000)
+      setOpenMenu(null)
+    } catch (err) {
+      console.error('Ошибка копирования:', err)
+    }
+  }
+
+  const openLink = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setOpenMenu(null)
+  }
+
+  return (
+    <>
+      <div className="social-buttons-wrapper">
+        <h4 className="social-title">Присоединяйтесь к нам</h4>
+        <div className="social-buttons">
+          {/* MAX */}
+          <div className="social-button-container">
+            <button
+              className="social-btn social-max"
+              onClick={() => setOpenMenu(openMenu === 'max' ? null : 'max')}
+            >
+              <span>💬</span>
+              Физикум в MAX
+              <span className="dropdown-arrow">{openMenu === 'max' ? '▲' : '▼'}</span>
+            </button>
+            
+            {openMenu === 'max' && (
+              <div className="social-dropdown">
+                <button
+                  className="social-dropdown-item"
+                  onClick={() => copyToClipboard(socialLinks.max, 'max')}
+                >
+                  📋 Скопировать ссылку
+                  {copied === 'max' && <span className="copied-badge">✓ Скопировано!</span>}
+                </button>
+                <button
+                  className="social-dropdown-item"
+                  onClick={() => openLink(socialLinks.max)}
+                >
+                  🔗 Перейти по ссылке
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Telegram */}
+          <div className="social-button-container">
+            <button
+              className="social-btn social-tg"
+              onClick={() => setOpenMenu(openMenu === 'tg' ? null : 'tg')}
+            >
+              <span>✈️</span>
+              Физикум в Телеграм
+              <span className="dropdown-arrow">{openMenu === 'tg' ? '▲' : '▼'}</span>
+            </button>
+            
+            {openMenu === 'tg' && (
+              <div className="social-dropdown">
+                <button
+                  className="social-dropdown-item"
+                  onClick={() => copyToClipboard(socialLinks.tg, 'tg')}
+                >
+                  📋 Скопировать ссылку
+                  {copied === 'tg' && <span className="copied-badge">✓ Скопировано!</span>}
+                </button>
+                <button
+                  className="social-dropdown-item"
+                  onClick={() => openLink(socialLinks.tg)}
+                >
+                  🔗 Перейти по ссылке
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Клик вне меню закрывает его */}
+      {openMenu && (
+        <div className="social-backdrop" onClick={() => setOpenMenu(null)} />
+      )}
+    </>
+  )
+}
+
+// ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
 // ============================================
 const AppContent = () => {
@@ -1013,14 +1116,7 @@ const AppContent = () => {
                 <span className="logo-text">Физик<span className="logo-accent">ум</span></span>
               </div>
               <p className="footer-description">Сайт про физику для школьников. Учимся, обсуждаем и влюбляемся в науку вместе.</p>
-              <div className="social-buttons">
-                <a className="social-btn social-max" href="https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc" target="_blank" rel="noopener noreferrer">
-                  <span>💬</span> Физикум в MAX
-                </a>
-                <a className="social-btn social-tg" href="https://t.me/physicym" target="_blank" rel="noopener noreferrer">
-                  <span>✈️</span> Физикум в Телеграмме
-                </a>
-              </div>
+              <SocialButtons />
             </div>
 
             <div className="footer-links">
