@@ -1755,3 +1755,171 @@ body {
 .news-detail-source a:hover {
   text-decoration: underline;
 }
+/* ============ ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ ============ */
+.legal-document {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 50px 60px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.legal-document h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.legal-meta {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.legal-document section {
+  margin-bottom: 32px;
+}
+
+.legal-document h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.legal-document p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+}
+
+.legal-document ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.legal-document ul li {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding: 6px 0 6px 28px;
+  position: relative;
+  font-size: 1.05rem;
+}
+
+.legal-document ul li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: var(--accent-blue);
+  font-weight: bold;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.legal-document a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent-blue);
+  transition: var(--transition);
+}
+
+.legal-document a:hover {
+  color: var(--accent-purple);
+  border-bottom-style: solid;
+}
+
+.legal-footer {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Адаптив для документов */
+@media (max-width: 768px) {
+  .legal-document {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+  
+  .legal-document h1 {
+    font-size: 1.6rem;
+  }
+  
+  .legal-document h2 {
+    font-size: 1.15rem;
+  }
+  
+  .legal-document p,
+  .legal-document ul li {
+    font-size: 0.98rem;
+  }
+}
+
+/* Стили для печати */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .header,
+  .footer,
+  .ticker,
+  .cookie-banner,
+  .back-button,
+  .legal-footer,
+  .stars,
+  .blob {
+    display: none !important;
+  }
+  
+  .page {
+    padding: 0 !important;
+  }
+  
+  .legal-document {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: black !important;
+  }
+  
+  .legal-document h1,
+  .legal-document h2 {
+    color: black !important;
+  }
+  
+  .legal-document p,
+  .legal-document ul li {
+    color: #333 !important;
+  }
+  
+  .legal-meta {
+    border-bottom-color: #ccc !important;
+  }
+  
+  .legal-document a {
+    color: black !important;
+    text-decoration: underline !important;
+    border-bottom: none !important;
+  }
+  
+  .legal-document a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+}
