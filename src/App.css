@@ -2110,3 +2110,42 @@ body {
   font-size: 0.8rem;
   font-weight: 700;
 }
+/* ============ ФИНАЛЬНЫЙ МОБИЛЬНЫЙ ФИКС (ОБЯЗАТЕЛЬНО В КОНЦЕ ФАЙЛА) ============ */
+@media (max-width: 768px) {
+  /* Контакты — строго столбиком, на всю ширину */
+  .contacts-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+  }
+
+  .contact-card {
+    width: 100%;
+  }
+
+  /* Страницы не могут растянуть экран шире телефона */
+  .page,
+  .hero {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  /* Шапка в одну строку: Регистрация справа */
+  .header-right {
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+  }
+
+  .search-box {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-input:focus {
+    width: 100%;
+  }
+}
