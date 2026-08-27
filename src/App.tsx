@@ -324,14 +324,16 @@ const Header = ({
 // ============================================
 // ГЛАВНАЯ СТРАНИЦА
 // ============================================
-const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; openSocial: (p: 'max' | 'tg') => void }) => {
+const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string) => void; openSocial: (p: 'max' | 'tg') => void; openSecret: () => void }) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
 
   const cards = [
-    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы'), link: '' },
-    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', action: () => {}, link: '/news' },
-    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум'), link: '' },
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы') },
+    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
+    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
+    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
+    { id: 'secret', icon: '🔮', title: '?', description: 'Секретный раздел — скоро раскроем', color: '#64748B', action: openSecret, secret: true },
   ]
 
   return (
@@ -345,10 +347,10 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
 
       <div className="bento-grid">
         {cards.map(card => {
-          const inner = (
+          const Inner = (
             <>
               <div className="bento-icon">{card.icon}</div>
-              <h3 className="bento-title">{card.title}</h3>
+              <h3 className={`bento-title ${card.secret ? 'bento-title-secret' : ''}`}>{card.title}</h3>
               <p className="bento-desc">{card.description}</p>
               <div className="bento-arrow">→</div>
             </>
@@ -359,10 +361,10 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
               <Link
                 key={card.id}
                 to={card.link}
-                className="bento-card"
-                style={{ '--accent': card.color, textDecoration: 'none', color: 'inherit' } as CSSProperties}
+                className={`bento-card ${card.secret ? 'bento-card-secret' : ''}`}
+                style={{ '--accent': card.color, textDecoration: 'none' } as CSSProperties}
               >
-                {inner}
+                {Inner}
               </Link>
             )
           }
@@ -370,11 +372,11 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
           return (
             <button
               key={card.id}
-              className="bento-card"
+              className={`bento-card ${card.secret ? 'bento-card-secret' : ''}`}
               style={{ '--accent': card.color } as CSSProperties}
               onClick={card.action}
             >
-              {inner}
+              {Inner}
             </button>
           )
         })}
@@ -1105,6 +1107,7 @@ const AppContent = () => {
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
   const [socialModal, setSocialModal] = useState<'max' | 'tg' | null>(null)
   const [socialCopied, setSocialCopied] = useState(false)
+  const [secretOpen, setSecretOpen] = useState(false)
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
@@ -1176,7 +1179,7 @@ const AppContent = () => {
       />
 
       <Routes>
-        <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} />} />
+        <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} openSecret={() => setSecretOpen(true)} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:id" element={<NewsDetailPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
@@ -1248,6 +1251,26 @@ const AppContent = () => {
         onAccept={acceptCookies}
         onMore={() => navigate('/privacy')}
       />
+
+      {/* СЕКРЕТНАЯ МОДАЛКА */}
+      {secretOpen && (
+        <div className="modal-overlay" onClick={() => setSecretOpen(false)}>
+          <div className="modal-content secret-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSecretOpen(false)}>✕</button>
+            <div className="secret-emoji">🔮</div>
+            <h2 className="modal-title">Тсс… это секрет!</h2>
+            <p className="modal-text">
+              Здесь появится <span className="highlight">что-то особенное</span> —
+              совсем скоро. Следи за обновлениями и будь первым, кто узнает!
+            </p>
+            <p className="modal-subtext">Рассказывай друзьям про Физикум — чем больше нас, тем скорее откроем секрет ✨</p>
+            <button className="btn btn-primary btn-large" onClick={() => setSecretOpen(false)}>
+              Понял, буду ждать!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* МАЛЕНЬКОЕ ОКНО СОЦСЕТЕЙ */}
       {socialModal && (
         <div className="modal-overlay" onClick={() => setSocialModal(null)}>

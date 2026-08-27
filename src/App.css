@@ -2258,3 +2258,54 @@ body {
     padding: 24px 20px;
   }
 }
+
+/* ============ КАРТОЧКА "ТРЕНАЖЁР" И "СЕКРЕТ" ============ */
+.bento-title-secret {
+  font-size: 2.2rem !important;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.03em;
+}
+
+.bento-card-secret {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.08));
+  border: 1px dashed rgba(139, 92, 246, 0.4) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card-secret::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.1) 50%, transparent 70%);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%); }
+  100% { transform: translateX(100%) translateY(100%); }
+}
+
+.bento-card-secret:hover {
+  border-style: solid !important;
+  border-color: var(--accent-purple) !important;
+}
+
+/* ============ СЕКРЕТНАЯ МОДАЛКА ============ */
+.secret-modal {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)), var(--modal-bg);
+}
+
+.secret-emoji {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
