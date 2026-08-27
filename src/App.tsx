@@ -297,8 +297,9 @@ const Header = ({
       <nav className="header-center">
         <Link className={`nav-link ${isActive('/') ? 'nav-active' : ''}`} to="/">Главная</Link>
         <button className="nav-link" onClick={() => openModal('Материалы')}>Материалы</button>
-        <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <button className="nav-link" onClick={() => openModal('Форум')}>Форум</button>
+        <button className="nav-link" onClick={() => openModal('Тренажёр')}>Тренажёр</button>
+        <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <Link className={`nav-link ${isActive('/services') ? 'nav-active' : ''}`} to="/services">Услуги</Link>
       </nav>
 
@@ -331,8 +332,8 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
     { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы') },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
-    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
+    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
     { id: 'secret', icon: '🔮', title: '?', description: 'Секретный раздел — скоро раскроем', color: '#64748B', action: openSecret, secret: true },
   ]
 
