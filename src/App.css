@@ -51,8 +51,6 @@
 }
 
 html, body {
-  overflow-x: hidden;
-  overflow-x: clip;
   max-width: 100%;
 }
 
@@ -139,6 +137,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: clip; /* держит ширину, но не ломает липкую шапку */
 }
 
 /* ============ ШАПКА ============ */
