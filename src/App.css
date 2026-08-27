@@ -50,13 +50,13 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+html, body {
   overflow-x: hidden;
+  max-width: 100%;
 }
 
-html, body {
-  max-width: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -853,10 +853,6 @@ body {
   flex-shrink: 0;
 }
 
-.modal-content,
-.social-modal {
-  max-width: calc(100vw - 40px);
-}
 /* ============ МОДАЛКА ============ */
 .modal-overlay {
   position: fixed;
@@ -1010,11 +1006,35 @@ body {
     gap: 10px;
     flex-wrap: wrap;
   }
-  
+
+  /* Каждая часть шапки — на своей строке, ничего не распирает */
+  .header-left {
+    width: 100%;
+    flex: none;
+  }
+
+  .header-right {
+    width: 100%;
+    flex: none;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   .header-center {
     order: 3;
     width: 100%;
     padding-bottom: 4px;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  /* Контакты — вертикально, на всю ширину */
+  .contacts-grid {
+    grid-template-columns: 1fr;
   }
   
   .logo-text {
@@ -1031,19 +1051,12 @@ body {
     height: 36px;
   }
   
-  .header-right {
-    flex-wrap: wrap;
-    gap: 8px;
+  .search-input {
+    width: 100px;
   }
   
-  .search-box {
-    order: 3;
-    width: 100%;
-  }
-  
-  .search-input,
   .search-input:focus {
-    width: 100%;
+    width: 130px;
   }
   
   .hero {
@@ -1095,10 +1108,6 @@ body {
   .footer-bottom {
     flex-direction: column;
     text-align: center;
-  }
-  
-    .contacts-grid {
-    grid-template-columns: 1fr;
   }
   
   .cookie-content {
