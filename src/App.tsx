@@ -638,23 +638,23 @@ const ServicesPage = ({ openModal }: { openModal: (t: string) => void }) => {
 // ============================================
 const ContactsPage = () => {
   const navigate = useNavigate()
-  const [copied, setCopied] = useState(false)
+  const [copiedType, setCopiedType] = useState<'tg' | 'support' | 'business' | null>(null)
 
   useEffect(() => { document.title = 'Контакты — Физикум' }, [])
 
-  const copyUsername = async () => {
+  const copyText = async (text: string, type: 'tg' | 'support' | 'business') => {
     try {
-      await navigator.clipboard.writeText('@Fababab')
+      await navigator.clipboard.writeText(text)
     } catch {
       const textarea = document.createElement('textarea')
-      textarea.value = '@Fababab'
+      textarea.value = text
       document.body.appendChild(textarea)
       textarea.select()
       document.execCommand('copy')
       document.body.removeChild(textarea)
     }
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setCopiedType(type)
+    setTimeout(() => setCopiedType(null), 2000)
   }
 
   return (
@@ -670,10 +670,10 @@ const ContactsPage = () => {
           <div className="contact-icon">✈️</div>
           <h3>Написать в Телеграм</h3>
           <p className="contact-desc">Самый быстрый способ связаться</p>
-          <button className="contact-username" onClick={copyUsername}>
+          <button className="contact-username" onClick={() => copyText('@Fababab', 'tg')}>
             @Fababab
-            <span className={`social-copy-icon ${copied ? 'copied' : ''}`}>
-              {copied ? '✓ Скопировано!' : '📋'}
+            <span className={`social-copy-icon ${copiedType === 'tg' ? 'copied' : ''}`}>
+              {copiedType === 'tg' ? '✓ Скопировано!' : '📋'}
             </span>
           </button>
           <a
@@ -686,20 +686,42 @@ const ContactsPage = () => {
           </a>
         </div>
 
-        {/* Почта для информации и помощи */}
-        <div className="contact-card contact-card-soon">
+        {/* Почта для поддержки */}
+        <div className="contact-card">
           <div className="contact-icon">📮</div>
           <h3>Для информации и помощи</h3>
           <p className="contact-desc">Вопросы по сайту и материалам</p>
-          <div className="contact-soon-badge">Почта появится скоро</div>
+          <button className="contact-username" onClick={() => copyText('support@fizikum.ru', 'support')}>
+            support@fizikum.ru
+            <span className={`social-copy-icon ${copiedType === 'support' ? 'copied' : ''}`}>
+              {copiedType === 'support' ? '✓ Скопировано!' : '📋'}
+            </span>
+          </button>
+          <a
+            className="btn btn-primary"
+            href="mailto:support@fizikum.ru"
+          >
+            Написать
+          </a>
         </div>
 
         {/* Почта для сотрудничества */}
-        <div className="contact-card contact-card-soon">
+        <div className="contact-card">
           <div className="contact-icon">🤝</div>
           <h3>Для сотрудничества</h3>
           <p className="contact-desc">Репетиторам, партнёрам и СМИ</p>
-          <div className="contact-soon-badge">Почта появится скоро</div>
+          <button className="contact-username" onClick={() => copyText('business@fizikum.ru', 'business')}>
+            business@fizikum.ru
+            <span className={`social-copy-icon ${copiedType === 'business' ? 'copied' : ''}`}>
+              {copiedType === 'business' ? '✓ Скопировано!' : '📋'}
+            </span>
+          </button>
+          <a
+            className="btn btn-primary"
+            href="mailto:business@fizikum.ru"
+          >
+            Написать
+          </a>
         </div>
       </div>
     </main>
@@ -729,7 +751,7 @@ const PrivacyPolicyPage = () => {
 
         <section>
           <h2>2. Оператор персональных данных</h2>
-          <p>Оператором является владелец сайта Физикум. Связаться с оператором можно по электронной почте: <a href="mailto:info@fizikum.ru">info@fizikum.ru</a>.</p>
+          <p>Оператором является владелец сайта Физикум. Связаться с оператором можно по электронной почте: <a href="mailto:info@fizikum.ru">support@fizikum.ru</a>.</p>
         </section>
 
         <section>
@@ -900,7 +922,7 @@ const TermsPage = () => {
 
         <section>
           <h2>9. Контактная информация</h2>
-          <p>По всем вопросам, связанным с использованием Сайта, обращайтесь: <a href="mailto:info@fizikum.ru">info@fizikum.ru</a>.</p>
+          <p>По всем вопросам, связанным с использованием Сайта, обращайтесь: <a href="mailto:support@fizikum.ru">info@fizikum.ru</a>.</p>
         </section>
 
         <div className="legal-footer">
@@ -970,7 +992,7 @@ const ConsentPage = () => {
 
         <section>
           <h2>5. Срок действия согласия</h2>
-          <p>Настоящее согласие действует в течение всего периода использования Сайта и 30 дней после удаления аккаунта. Согласие может быть отозвано путём направления письменного заявления на адрес <a href="mailto:info@fizikum.ru">info@fizikum.ru</a>.</p>
+          <p>Настоящее согласие действует в течение всего периода использования Сайта и 30 дней после удаления аккаунта. Согласие может быть отозвано путём направления письменного заявления на адрес <a href="mailto:support@fizikum.ru">info@fizikum.ru</a>.</p>
         </section>
 
         <section>
