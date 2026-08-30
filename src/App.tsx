@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, type CSSProperties, type ReactNode } from 'react'
+import { useState, useEffect, Fragment, type CSSProperties, type ReactNode, type KeyboardEvent } from 'react'
 import { BrowserRouter, Routes, Route, Link, useNavigate, useParams, useLocation } from 'react-router-dom'
 import './App.css'
 
@@ -272,7 +272,7 @@ const CookieBanner = ({ open, onAccept, onMore }: { open: boolean; onAccept: () 
 }
 
 // ============================================
-// ШАПКА
+// ШАПКА (с поиском, работающим как Ctrl+F)
 // ============================================
 const Header = ({
   theme, toggleTheme, openModal, currentPath
@@ -282,8 +282,74 @@ const Header = ({
   openModal: (t: string) => void
   currentPath: string
 }) => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchInfo, setSearchInfo] = useState<{ query: string; count: number; current: number } | null>(null)
+  const [newsMatches, setNewsMatches] = useState<NewsItem[]>([])
+
   const isActive = (path: string) =>
     currentPath === path || (path === '/news' && currentPath.startsWith('/news'))
+
+  // Сброс поиска при переходе на другую страницу
+  useEffect(() => {
+    setSearchInfo(null)
+    setNewsMatches([])
+    window.getSelection()?.removeAllRanges()
+  }, [currentPath])
+
+  // Сколько совпадений на текущей странице
+  const countMatchesOnPage = (q: string) => {
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const matches = document.body.innerText.match(new RegExp(escaped, 'gi'))
+    return matches ? matches.length : 0
+  }
+
+  const startSearch = (q: string) => {
+    const count = countMatchesOnPage(q)
+    if (count > 0) {
+      ;(window as any).find?.(q) // браузерное выделение, как Ctrl+F
+      setSearchInfo({ query: q, count, current: 1 })
+    } else {
+      setSearchInfo({ query: q, count: 0, current: 0 })
+    }
+    // Заодно ищем в новостях (поиск по всему сайту)
+    const lower = q.toLowerCase()
+    setNewsMatches(
+      newsData.filter(n =>
+        n.title.toLowerCase().includes(lower) ||
+        n.shortDescription.toLowerCase().includes(lower)
+      )
+    )
+  }
+
+  const findNext = () => {
+    if (!searchInfo || searchInfo.count === 0) return
+    ;(window as any).find?.(searchInfo.query)
+    setSearchInfo({ ...searchInfo, current: (searchInfo.current % searchInfo.count) + 1 })
+  }
+
+  const findPrev = () => {
+    if (!searchInfo || searchInfo.count === 0) return
+    ;(window as any).find?.(searchInfo.query, false, true)
+    setSearchInfo({ ...searchInfo, current: ((searchInfo.current - 2 + searchInfo.count) % searchInfo.count) + 1 })
+  }
+
+  const closeSearch = () => {
+    setSearchInfo(null)
+    setNewsMatches([])
+    setSearchQuery('')
+    window.getSelection()?.removeAllRanges()
+  }
+
+  const handleSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const q = searchQuery.trim()
+      if (!q) return
+      // Повторный Enter = следующее совпадение (как в Ctrl+F)
+      if (searchInfo && searchInfo.query === q && searchInfo.count > 0) findNext()
+      else startSearch(q)
+    }
+    if (e.key === 'Escape') closeSearch()
+  }
 
   return (
     <header className="header">
@@ -304,14 +370,46 @@ const Header = ({
       </nav>
 
       <div className="header-right">
-        <div className="search-box">
-          <span className="search-icon">🔍</span>
-          <input
-            className="search-input"
-            placeholder="Поиск по сайту..."
-            onKeyDown={(e) => { if (e.key === 'Enter') openModal('Поиск') }}
-          />
+        {/* ПОИСК КАК CTRL+F */}
+        <div className="search-wrapper">
+          <div className="search-box">
+            <span className="search-icon">🔍</span>
+            <input
+              className="search-input"
+              placeholder="Поиск по сайту..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+            />
+          </div>
+
+          {searchInfo && (
+            <div className="search-panel">
+              <div className="search-panel-row">
+                <span className="search-counter">
+                  {searchInfo.count > 0 ? `${searchInfo.current} из ${searchInfo.count}` : 'На странице не найдено'}
+                </span>
+                <div className="search-panel-buttons">
+                  <button className="search-panel-btn" onClick={findPrev} title="Предыдущее совпадение">↑</button>
+                  <button className="search-panel-btn" onClick={findNext} title="Следующее совпадение">↓</button>
+                  <button className="search-panel-btn" onClick={closeSearch} title="Закрыть поиск">✕</button>
+                </div>
+              </div>
+
+              {newsMatches.length > 0 && (
+                <div className="search-news-results">
+                  <span className="search-news-label">📰 Найдено в новостях:</span>
+                  {newsMatches.slice(0, 3).map(n => (
+                    <Link key={n.id} to={`/news/${n.id}`} className="search-news-link" onClick={closeSearch}>
+                      {n.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
         <button className="theme-toggle" onClick={toggleTheme} aria-label="Сменить тему">
           <span className="theme-icon">{theme === 'dark' ? '☀️' : '🌙'}</span>
         </button>
@@ -339,6 +437,13 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
 
   return (
     <main className="hero">
+      {/* Баннер обратной связи */}
+      <div className="feedback-banner">
+        <span className="feedback-icon">💡</span>
+        <p>Если вы заметили ошибку на сайте или у вас есть идеи по сайту — пожалуйста, напишите нам!</p>
+        <Link to="/contacts" className="btn btn-primary btn-small">Написать</Link>
+      </div>
+
       <div className="hero-badge"><span className="badge-dot" />Скоро открытие</div>
       <h1 className="hero-title">Физика — <span className="gradient-text">это круто</span></h1>
       <p className="hero-subtitle">
@@ -751,7 +856,7 @@ const PrivacyPolicyPage = () => {
 
         <section>
           <h2>2. Оператор персональных данных</h2>
-          <p>Оператором является владелец сайта Физикум. Связаться с оператором можно по электронной почте: <a href="mailto:info@fizikum.ru">support@fizikum.ru</a>.</p>
+          <p>Оператором является владелец сайта Физикум. Связаться с оператором можно по электронной почте: <a href="mailto:support@fizikum.ru">support@fizikum.ru</a>.</p>
         </section>
 
         <section>
@@ -922,7 +1027,7 @@ const TermsPage = () => {
 
         <section>
           <h2>9. Контактная информация</h2>
-          <p>По всем вопросам, связанным с использованием Сайта, обращайтесь: <a href="mailto:support@fizikum.ru">info@fizikum.ru</a>.</p>
+          <p>По всем вопросам, связанным с использованием Сайта, обращайтесь: <a href="mailto:support@fizikum.ru">support@fizikum.ru</a>.</p>
         </section>
 
         <div className="legal-footer">
@@ -992,7 +1097,7 @@ const ConsentPage = () => {
 
         <section>
           <h2>5. Срок действия согласия</h2>
-          <p>Настоящее согласие действует в течение всего периода использования Сайта и 30 дней после удаления аккаунта. Согласие может быть отозвано путём направления письменного заявления на адрес <a href="mailto:support@fizikum.ru">info@fizikum.ru</a>.</p>
+          <p>Настоящее согласие действует в течение всего периода использования Сайта и 30 дней после удаления аккаунта. Согласие может быть отозвано путём направления письменного заявления на адрес <a href="mailto:support@fizikum.ru">support@fizikum.ru</a>.</p>
         </section>
 
         <section>

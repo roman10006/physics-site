@@ -2309,3 +2309,126 @@ body {
   margin-bottom: 20px;
   animation: float 3s ease-in-out infinite;
 }
+/* ============ БАННЕР ОБРАТНОЙ СВЯЗИ ============ */
+.feedback-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 720px;
+  margin: 0 auto 28px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(236, 72, 153, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 16px;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  animation: fadeInUp 0.8s ease both;
+}
+
+.feedback-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.feedback-banner p {
+  flex: 1;
+  min-width: 220px;
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* ============ ПАНЕЛЬ ПОИСКА (КАК CTRL+F) ============ */
+.search-wrapper {
+  position: relative;
+}
+
+.search-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 60;
+  min-width: 250px;
+  background: var(--cookie-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease;
+}
+
+.search-panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.search-counter {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.search-panel-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.search-panel-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.search-panel-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
+}
+
+.search-news-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.search-news-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.search-news-link {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: var(--transition);
+}
+
+.search-news-link:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-blue);
+}
+
+@media (max-width: 768px) {
+  .feedback-banner {
+    font-size: 0.82rem;
+    padding: 10px 14px;
+  }
+}
