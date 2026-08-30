@@ -353,8 +353,14 @@ const newsButtons: { icon: string; label: string; category: NewsCategory }[] = [
 
 
 const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  const date = new Date(dateStr.replace(' ', 'T'))
+  const datePart = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  // Показываем время, только если оно указано в дате
+  if (dateStr.includes(':')) {
+    const timePart = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    return `${datePart} в ${timePart}`
+  }
+  return datePart
 }
 
 // ============================================
@@ -658,8 +664,8 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
 
     const byDate = (a: NewsItem, b: NewsItem) =>
       sortOrder === 'newest'
-        ? new Date(b.date).getTime() - new Date(a.date).getTime()
-        : new Date(a.date).getTime() - new Date(b.date).getTime()
+        ? new Date(b.date.replace(' ', 'T')).getTime() - new Date(a.date.replace(' ', 'T')).getTime()
+        : new Date(a.date.replace(' ', 'T')).getTime() - new Date(b.date.replace(' ', 'T')).getTime()
 
     if (newsFilter === 'events' && selectedRegion !== 'Без региона') {
       const regionEvents = filtered.filter(n => n.region === selectedRegion).sort(byDate)
