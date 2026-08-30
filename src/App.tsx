@@ -258,8 +258,9 @@ const newsData: NewsItem[] = [
 
 Практическое внедрение подобных полупроводниковых материалов откроет возможности для создания устройств, способных одновременно управлять как электрическими, так и магнитными параметрами системы. В перспективе это позволит обеспечить высокую скорость коммутации энергии в линиях высокого напряжения, а также организовать надёжное магнитное хранение данных в пределах единой кристаллической структуры, что существенно повысит общую энергоэффективность электронных систем нового поколения.
 
-Открытие российских учёных может стать важным шагом к созданию гибридных устройств, объединяющих преимущества полупроводниковой и магнитной электроники. Такие компоненты найдут применение в квантовых компьютерах, системах искусственного интеллекта и энергонезависимой памяти следующего поколения.`,
-    source: 'Работа опубликована в журнале «Физика твёрдого тела»',
+Открытие российских учёных может стать важным шагом к созданию гибридных устройств, объединяющих преимущества полупроводниковой и магнитной электроники. Такие компоненты найдут применение в квантовых компьютерах, системах искусственного интеллекта и энергонезависимой памяти следующего поколения.
+
+Работа опубликована в журнале [Физика твёрдого тела](https://journals.ioffe.ru/articles/63637).`,
     category: 'russia',
   },
 ]
@@ -268,11 +269,39 @@ const newsData: NewsItem[] = [
 // ============================================
 // РЕНДЕР ТЕКСТА С ФОТО ([ФОТО] и [ФОТО: подпись])
 // ============================================
+// Рендер подробного описания: абзацы + фото + ссылки
 const renderBody = (news: NewsItem) => {
   const images = news.images && news.images.length > 0 ? news.images : news.image ? [news.image] : []
   const parts = news.fullDescription.split(/\[ФОТО(?::([^\]]*))?\]/g)
   const out: ReactNode[] = []
   let img = 0
+
+  // Функция для обработки ссылок в тексте [текст](url)
+  const processLinks = (text: string): ReactNode[] => {
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
+    const result: ReactNode[] = []
+    let lastIndex = 0
+    let match
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      // Текст до ссылки
+      if (match.index > lastIndex) {
+        result.push(text.slice(lastIndex, match.index))
+      }
+      // Сама ссылка
+      result.push(
+        <a key={match.index} href={match[2]} target="_blank" rel="noopener noreferrer">
+          {match[1]}
+        </a>
+      )
+      lastIndex = linkRegex.lastIndex
+    }
+    // Оставшийся текст после последней ссылки
+    if (lastIndex < text.length) {
+      result.push(text.slice(lastIndex))
+    }
+    return result.length > 0 ? result : [text]
+  }
 
   for (let i = 0; i < parts.length; i += 2) {
     const text = parts[i] ?? ''
@@ -282,7 +311,7 @@ const renderBody = (news: NewsItem) => {
       .split(/\n{2,}/)
       .map(p => p.trim())
       .filter(Boolean)
-      .forEach((para, j) => out.push(<p key={`p${i}-${j}`}>{para}</p>))
+      .forEach((para, j) => out.push(<p key={`p${i}-${j}`}>{processLinks(para)}</p>))
 
     if (i + 1 < parts.length) {
       const src = images[img]
@@ -807,14 +836,16 @@ const NewsDetailPage = () => {
 
         <div className="news-detail-body">{renderBody(news)}</div>
 
-        <div className="news-detail-source">
-          <strong>Источник:</strong>{' '}
-          {news.source.startsWith('http') ? (
-            <a href={news.source} target="_blank" rel="noopener noreferrer">{news.source}</a>
-          ) : (
-            news.source
-          )}
-        </div>
+        {news.source && (
+          <div className="news-detail-source">
+            <strong>Источник:</strong>{' '}
+            {news.source.startsWith('http') ? (
+              <a href={news.source} target="_blank" rel="noopener noreferrer">{news.source}</a>
+            ) : (
+              news.source
+            )}
+          </div>
+        )}
       </article>
     </main>
   )
