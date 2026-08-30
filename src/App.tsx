@@ -521,7 +521,8 @@ const Header = ({
   const [newsMatches, setNewsMatches] = useState<NewsItem[]>([])
 
   const isActive = (path: string) =>
-    currentPath === path || (path === '/news' && currentPath.startsWith('/news'))
+    currentPath === path ||
+    (path === '/news' && (currentPath.startsWith('/news') || currentPath.startsWith('/article')))
 
   // Сброс поиска при переходе на другую страницу
   useEffect(() => {
@@ -634,7 +635,7 @@ const Header = ({
                 <div className="search-news-results">
                   <span className="search-news-label">📰 Найдено в новостях:</span>
                   {newsMatches.slice(0, 3).map(n => (
-                    <Link key={n.id} to={`/news/${n.id}`} className="search-news-link" onClick={closeSearch}>
+                    <Link key={n.id} to={`/article/${n.id}`} className="search-news-link" onClick={closeSearch}>
                       {n.title}
                     </Link>
                   ))}
@@ -674,7 +675,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
       {/* Баннер обратной связи */}
       <div className="feedback-banner">
         <span className="feedback-icon">💡</span>
-        <p>Если вы заметили ошибку на сайте или у вас есть идеи по сайту — пожалуйста, напишите нам!</p>
+        <p>Если вы заметили ошибку на сайте — пожалуйста, напишите нам!</p>
         <Link to="/contacts" className="btn btn-primary btn-small">Написать</Link>
       </div>
 
@@ -742,14 +743,29 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
 // СПИСОК НОВОСТЕЙ
 // ============================================
 const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
-  const [newsFilter, setNewsFilter] = useState<NewsCategory>('all')
+  const { category } = useParams<{ category: string }>()
+  const navigate = useNavigate()
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
   const [selectedRegion, setSelectedRegion] = useState<string>('Без региона')
 
-  useEffect(() => { document.title = 'Новости физики — Физикум' }, [])
+  // Категория берётся прямо из адреса: /news/russia, /news/world и т.д.
+  const validCategories: NewsCategory[] = ['world', 'russia', 'olympiads', 'events', 'scientific']
+  const newsFilter: NewsCategory =
+    category && validCategories.includes(category as NewsCategory)
+      ? (category as NewsCategory)
+      : 'all'
 
-  const toggleFilter = (category: NewsCategory) => {
-    setNewsFilter(prev => (prev === category ? 'all' : category))
+  useEffect(() => {
+    document.title = newsFilter === 'all'
+      ? 'Новости физики — Физикум'
+      : `${categoryNames[newsFilter]} — Новости — Физикум`
+  }, [newsFilter])
+
+  // Клик по кнопке = переход на страницу категории,
+  // повторный клик по активной = возврат ко всем новостям
+  const toggleFilter = (cat: NewsCategory) => {
+    if (newsFilter === cat) navigate('/news')
+    else navigate(`/news/${cat}`)
   }
 
   const getFilteredNews = () => {
@@ -855,7 +871,7 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
                   </div>
                 )}
 
-                <Link to={`/news/${news.id}`} className="news-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to={`/article/${news.id}`} className="news-card" style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div className="news-card-image" style={{ position: 'relative' }}>
                     <div className="news-image-placeholder">📰</div>
                     {(news.images?.[1] || news.image) && (
@@ -920,7 +936,7 @@ const NewsDetailPage = () => {
 
   return (
     <main className="page">
-      <button className="back-button" onClick={() => navigate('/news')}>← Назад к списку</button>
+      <button className="back-button" onClick={() => navigate(-1)}>← Назад к списку</button>
 
       <article className="news-detail">
         <div className="news-detail-header">
@@ -1545,7 +1561,8 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} openSecret={() => setSecretOpen(true)} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
-        <Route path="/news/:id" element={<NewsDetailPage />} />
+        <Route path="/news/:category" element={<NewsListPage openModal={openModal} />} />
+        <Route path="/article/:id" element={<NewsDetailPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/about" element={<AboutPage />} />
