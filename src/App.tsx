@@ -812,7 +812,14 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
 
   const getFilteredNews = () => {
     let filtered = newsData
-    if (newsFilter !== 'all') filtered = filtered.filter(n => n.category === newsFilter)
+
+    // На главной (/news) показываем только новости (мир + Россия),
+    // олимпиады, события и научные работы видны только на своих страницах
+    if (newsFilter === 'all') {
+      filtered = filtered.filter(n => n.category === 'world' || n.category === 'russia')
+    } else {
+      filtered = filtered.filter(n => n.category === newsFilter)
+    }
 
     const byDate = (a: NewsItem, b: NewsItem) =>
       sortOrder === 'newest'
