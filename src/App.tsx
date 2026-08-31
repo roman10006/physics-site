@@ -793,22 +793,17 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
 
   return (
     <main className="page">
-      <div className="news-header-row">
-        <h1 className="page-title">
-          {newsFilter === 'olympiads' ? (
-            <>Олимпиады <span className="gradient-text">по физике</span></>
-          ) : newsFilter === 'events' ? (
-            <>События <span className="gradient-text">в мире физики</span></>
-          ) : newsFilter === 'scientific' ? (
-            <>Научные <span className="gradient-text">работы</span></>
-          ) : (
-            <>Новости <span className="gradient-text">физики</span></>
-          )}
-        </h1>
-        <button className="write-news-btn" onClick={() => openModal('Написать новость')}>
-          <span>✍️</span>Написать новость
-        </button>
-      </div>
+      <h1 className="page-title">
+        {newsFilter === 'olympiads' ? (
+          <>Олимпиады <span className="gradient-text">по физике</span></>
+        ) : newsFilter === 'events' ? (
+          <>События <span className="gradient-text">в мире физики</span></>
+        ) : newsFilter === 'scientific' ? (
+          <>Научные <span className="gradient-text">работы</span></>
+        ) : (
+          <>Новости <span className="gradient-text">физики</span></>
+        )}
+      </h1>
 
       <p className="page-subtitle">
         {newsFilter === 'olympiads'
@@ -819,6 +814,12 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
           ? 'Исследовательские работы школьников и студентов'
           : 'Самое интересное из мира науки'}
       </p>
+
+      <div className="write-news-row">
+        <button className="write-news-btn" onClick={() => openModal('Написать новость')}>
+          <span>✍️</span>Написать новость
+        </button>
+      </div>
 
       <div className="news-toolbar">
         <div className="news-buttons">

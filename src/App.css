@@ -2434,3 +2434,9 @@ body {
     padding: 14px 18px;
   }
 }
+/* Кнопка "Написать новость" по центру */
+.write-news-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
