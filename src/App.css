@@ -2423,3 +2423,23 @@ body {
   color: var(--accent-purple);
   border-bottom-style: solid;
 }
+/* Красивые маркеры для списков с дефисом */
+.news-detail-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.news-detail-body ul li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 8px;
+}
+
+.news-detail-body ul li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--accent-blue);
+  font-weight: bold;
+}
