@@ -523,6 +523,34 @@ const newsData: NewsItem[] = [
     source: '',
     category: 'olympiads',
   },
+  {
+    id: 16,
+    title: 'Всероссийская конференция «Радиолокация в геофизике и радиофизике»',
+    date: '2026-09-16',
+    image: '/images/TOMSK.jpg',
+    shortDescription: 'Томский государственный университет и Научный совет Отделения физических наук РАН по распространению радиоволн приглашают принять участие',
+    fullDescription: `Томский государственный университет совместно с Научным советом ОФН РАН по распространению радиоволн анонсируют проведение всероссийской конференции с международным участием «Радиолокация в геофизике и радиофизике» (РГР-26). Мероприятие приурочено к 90-летию начала отечественных исследований ионосферы.
+
+[ФОТО]
+
+Программа конференции включает пленарные и секционные доклады по ключевым тематикам:
+
+1) Активная радиолокация: методы зондирования ионосферы, атмосферы и земной поверхности, лазерное и подповерхностное сканирование, а также СВЧ-контроль и биорадиолокация.
+2) Пассивная радиолокация: использование сигналов GPS и радиовещательных станций для мониторинга атмосферных процессов и состояния земной поверхности.
+3) Радиотехнические системы: разработка средств навигации, связи и локации для работы в космосе и атмосфере.
+4) Математическое моделирование: численные методы анализа распространения радиоволн.
+
+Даты: 16—18 сентября 2026 года.
+Место: Томск, проспект Ленина, дом 35, ТГУ.
+
+Зарегистрироваться можно [здесь](https://rgr.tsu.ru/register.php).
+
+Информация взята из [РАН](https://new.ras.ru/press-center/events-additional/vserossiyskaya-konferentsiya-radiolokatsiya-v-geofizike-i-radiofizike/).`,
+    source: '',
+    category: 'events',
+    city: 'Томск',
+    region: 'Томская область',
+  },
 ]
 
 
@@ -1068,8 +1096,8 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
                   <div className="news-card-content">
                     <div className="news-card-meta">
                       <span className="news-date">{formatDate(news.date)}</span>
-                      {news.city && news.region && (
-                        <span className="news-location">📍 {news.city}, {news.region}</span>
+                      {(news.city || news.region) && (
+                        <span className="news-location">📍 {news.city || news.region}</span>
                       )}
                     </div>
                     <h2 className="news-card-title">{news.title}</h2>
@@ -1123,8 +1151,8 @@ const NewsDetailPage = () => {
       <article className="news-detail">
         <div className="news-detail-header">
           <span className="news-date-large">{formatDate(news.date)}</span>
-          {news.city && news.region && (
-            <span className="news-location">📍 {news.city}, {news.region}</span>
+          {(news.city || news.region) && (
+            <span className="news-location">📍 {news.city || news.region}</span>
           )}
         </div>
 
