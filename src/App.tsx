@@ -1971,6 +1971,7 @@ const AppContent = () => {
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
+        <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
