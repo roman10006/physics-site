@@ -2443,3 +2443,194 @@ body {
   color: var(--accent-blue);
   font-weight: bold;
 }
+/* ============ СТРАНИЦА МАТЕРИАЛОВ ============ */
+.materials-search-box {
+  max-width: 700px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 20px;
+  transition: var(--transition);
+}
+
+.materials-search-box:focus-within {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 4px rgba(79, 125, 245, 0.15);
+}
+
+.materials-search-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.materials-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-family: inherit;
+}
+
+.materials-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Выбор класса */
+.materials-grade-selector {
+  max-width: 500px;
+  margin: 0 auto 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(79, 125, 245, 0.08));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 14px;
+  padding: 18px 22px;
+}
+
+.materials-grade-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.materials-grade-select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.materials-grade-select:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.materials-grade-select option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Сетка карточек */
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.materials-card {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px 32px;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition);
+  font-family: inherit;
+  color: var(--text-primary);
+  min-height: 200px;
+}
+
+.materials-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.materials-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.12),
+    0 0 80px -20px var(--accent);
+}
+
+.materials-card:hover::before {
+  opacity: 1;
+}
+
+.materials-card-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 25px var(--accent));
+}
+
+.materials-card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.materials-card-desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.materials-card-arrow {
+  align-self: flex-end;
+  font-size: 1.6rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.materials-card:hover .materials-card-arrow {
+  color: var(--accent);
+  transform: translateX(10px);
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .materials-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .materials-card {
+    padding: 28px 24px;
+    min-height: 160px;
+  }
+  
+  .materials-card-icon {
+    font-size: 2.5rem;
+  }
+  
+  .materials-card-title {
+    font-size: 1.35rem;
+  }
+  
+  .materials-search-input {
+    font-size: 1rem;
+  }
+}

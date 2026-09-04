@@ -860,7 +860,7 @@ const Header = ({
 
       <nav className="header-center">
         <Link className={`nav-link ${isActive('/') ? 'nav-active' : ''}`} to="/">Главная</Link>
-        <button className="nav-link" onClick={() => openModal('Материалы')}>Материалы</button>
+        <Link className={`nav-link ${isActive('/materials') ? 'nav-active' : ''}`} to="/materials">Материалы</Link>
         <button className="nav-link" onClick={() => openModal('Форум')}>Форум</button>
         <button className="nav-link" onClick={() => openModal('Тренажёр')}>Тренажёр</button>
         <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
@@ -925,7 +925,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
 
   const cards = [
-    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', action: () => openModal('Материалы') },
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', link: '/materials' },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, события, новости в мире физики', color: '#10B981', link: '/news' },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
@@ -1270,8 +1270,112 @@ const NewsDispatcher = ({ openModal }: { openModal: (t: string) => void }) => {
 }
 
 // ============================================
-// РЕПЕТИТОРЫ
+// МАТЕРИАЛЫ
 // ============================================
+const MaterialsPage = ({ openModal }: { openModal: (t: string) => void }) => {
+  const [selectedGrade, setSelectedGrade] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => { document.title = 'Материалы по физике — Физикум' }, [])
+
+  const grades = [
+    { value: 'all', label: 'Все классы' },
+    { value: '7', label: '7 класс' },
+    { value: '8', label: '8 класс' },
+    { value: '9', label: '9 класс' },
+    { value: '10', label: '10 класс' },
+    { value: '11', label: '11 класс' },
+  ]
+
+  const materialsCards = [
+    {
+      id: 'theory',
+      icon: '📚',
+      title: 'Теория',
+      description: 'Простые объяснения тем школьной программы',
+      color: '#4F7DF5',
+    },
+    {
+      id: 'textbooks',
+      icon: '📖',
+      title: 'Учебники',
+      description: 'Электронные учебники и справочники',
+      color: '#10B981',
+    },
+    {
+      id: 'video',
+      icon: '🎥',
+      title: 'Видеоуроки',
+      description: 'Видео с опытами и объяснениями',
+      color: '#EC4899',
+    },
+    {
+      id: 'problems',
+      icon: '🧩',
+      title: 'Задачи',
+      description: 'Задачи с решениями и подсказками',
+      color: '#F59E0B',
+    },
+  ]
+
+  return (
+    <main className="page">
+      <h1 className="page-title">
+        Материалы <span className="gradient-text">по физике</span>
+      </h1>
+      <p className="page-subtitle">
+        Теория, учебники, видеоуроки и задачи для школьников 7-11 классов
+      </p>
+
+      {/* Поиск по темам */}
+      <div className="materials-search-box">
+        <span className="materials-search-icon">🔍</span>
+        <input
+          className="materials-search-input"
+          placeholder="Найти тему, например: Кинематика, Закон Ома..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && searchQuery.trim()) {
+              openModal('Поиск материалов')
+            }
+          }}
+        />
+      </div>
+
+      {/* Выбор класса (опционально) */}
+      <div className="materials-grade-selector">
+        <label className="materials-grade-label">📚 Выбери свой класс (по желанию):</label>
+        <select
+          className="materials-grade-select"
+          value={selectedGrade}
+          onChange={(e) => setSelectedGrade(e.target.value)}
+        >
+          {grades.map(g => (
+            <option key={g.value} value={g.value}>{g.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* 4 карточки */}
+      <div className="materials-grid">
+        {materialsCards.map(card => (
+          <button
+            key={card.id}
+            className="materials-card"
+            style={{ '--accent': card.color } as CSSProperties}
+            onClick={() => openModal(card.title)}
+          >
+            <div className="materials-card-icon">{card.icon}</div>
+            <h3 className="materials-card-title">{card.title}</h3>
+            <p className="materials-card-desc">{card.description}</p>
+            <div className="materials-card-arrow">→</div>
+          </button>
+        ))}
+      </div>
+    </main>
+  )
+}
 // ============================================
 // УСЛУГИ (репетиторы и т.д.)
 // ============================================
@@ -1866,7 +1970,7 @@ const AppContent = () => {
         <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} openSecret={() => setSecretOpen(true)} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
-        <Route path="/services" element={<ServicesPage openModal={openModal} />} />
+        <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
