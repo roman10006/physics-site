@@ -323,7 +323,7 @@ const newsData: NewsItem[] = [
 
 Форма хиггсовского потенциала, имеющего характерный вид «мексиканской шляпы», определяется двумя параметрами: квадратичным членом (который напрямую связан с измеренной массой бозона, ≈125 ГэВ) и кубическим членом, описывающим трилинейную самосвязь. Единственный прямой способ экспериментально измерить этот параметр самосвязи — зафиксировать процесс парного рождения бозонов Хиггса (di-Higgs production). Однако в рамках СМ сечение этого процесса крайне мало, а фоновые процессы (такие как рождение t t̄ пар или непрерывного спектра ZZ) создают колоссальные помехи.
 
-[ФОТО: Изображение сгенерировано нейросетью Алиса AI]
+[ФОТО: Модель двух экспериментов по поиску парных бозонов Хиггса (Изображение: CERN)]
 
 На ICHEP 2026 представители ATLAS и CMS представили результаты комбинированного анализа данных, накопленных в ходе Run 3 БАК при энергии протон-протонных столкновений √s = 13.6 ТэВ. Объединение статистики и применение продвинутых алгоритмов машинного обучения для разделения сигнала и фона позволили существенно сузить доверительный интервал для модификатора трилинейной самосвязи.
 
@@ -724,7 +724,6 @@ const formatDate = (dateStr: string) => {
   }
   return datePart
 }
-
 // ============================================
 // МОДАЛКА "ПОКА ЧТО НЕТУ"
 // ============================================
@@ -738,7 +737,7 @@ const Modal = ({ open, type, onClose }: { open: boolean; type: string; onClose: 
         <h2 className="modal-title">Пока что нету :(</h2>
         <p className="modal-text">
           Раздел <span className="highlight">«{type}»</span> появится,
-          когда я заработаю <span className="highlight">500 рублей</span> на VPS-сервер.
+          когда я куплю VPS-сервер.
         </p>
         <p className="modal-subtext">Но ты можешь помочь — расскажи про сайт друзьям!</p>
         <button className="btn btn-primary btn-large" onClick={onClose}>Понял, жду запуска!</button>
@@ -925,7 +924,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
 
   const cards = [
-    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория и задачи по всем темам 7-11 классов', color: '#4F7DF5', link: '/materials' },
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#4F7DF5', link: '/materials' },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, события, новости в мире физики', color: '#10B981', link: '/news' },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
@@ -938,7 +937,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
       {/* Баннер обратной связи */}
       <div className="feedback-banner">
         <span className="feedback-icon">💡</span>
-        <p>Заметили ошибку на сайте — пожалуйста, напишите нам!</p>
+        <p>Заметили ошибку на сайте — пожалуйста, напишите!</p>
         <Link to="/contacts" className="btn btn-primary btn-small">Написать</Link>
       </div>
 
@@ -988,7 +987,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
 
       {/* МЫ В СОЦСЕТЯХ — видное место на главной */}
       <div className="social-section">
-        <h3 className="social-section-title">Мы в соцсетях</h3>
+        <h3 className="social-section-title">Физикум в соцсетях</h3>
         <div className="social-buttons">
           <button className="social-btn social-max" onClick={() => openSocial('max')}>
             <span>💬</span> Физикум в MAX
@@ -1010,6 +1009,7 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
   const navigate = useNavigate()
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest')
   const [selectedRegion, setSelectedRegion] = useState<string>('Без региона')
+  const [showPastEvents, setShowPastEvents] = useState(false)
 
   // Категория берётся прямо из адреса: /news/russia, /news/world и т.д.
   const validCategories: NewsCategory[] = ['world', 'russia', 'olympiads', 'events', 'scientific']
@@ -1053,7 +1053,25 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
       return [...regionEvents, ...otherEvents]
     }
 
-    return [...filtered].sort(byDate)
+    const sorted = [...filtered].sort(byDate)
+    return sorted
+  }
+
+  // Для событий: делим на будущие и прошедшие
+  const splitEvents = () => {
+    const all = getFilteredNews()
+    if (newsFilter !== 'events') return { upcoming: all, past: [] }
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const upcoming: NewsItem[] = []
+    const past: NewsItem[] = []
+    all.forEach(n => {
+      const eventDate = new Date(n.date.replace(' ', 'T'))
+      eventDate.setHours(0, 0, 0, 0)
+      if (eventDate >= today) upcoming.push(n)
+      else past.push(n)
+    })
+    return { upcoming, past }
   }
 
   const filteredNews = getFilteredNews()
@@ -1136,62 +1154,139 @@ const NewsListPage = ({ openModal }: { openModal: (t: string) => void }) => {
               Добавить свою работу
             </button>
           </div>
-        ) : filteredNews.length === 0 ? (
-          <div className="news-empty">
-            <div className="news-empty-emoji">📭</div>
-            <h3>Новостей пока нет</h3>
-            <p>В категории «{categoryNames[newsFilter]}» новостей ещё нет.</p>
-          </div>
-        ) : (
-          <>
-            {regionEventsCount === 0 && (
-              <div className="region-empty-banner">
-                <span className="region-empty-icon">🗺️</span>
-                <p><strong>В вашем регионе событий нет.</strong></p>
-                <p>Ниже показаны события из других регионов:</p>
+        ) : (() => {
+          const { upcoming, past } = splitEvents()
+          const all = [...upcoming, ...past]
+          const hasOnlyPast = upcoming.length === 0 && past.length > 0
+
+          if (all.length === 0) {
+            return (
+              <div className="news-empty">
+                <div className="news-empty-emoji">📭</div>
+                <h3>Новостей пока нет</h3>
+                <p>В категории «{categoryNames[newsFilter]}» новостей ещё нет.</p>
               </div>
-            )}
+            )
+          }
 
-            {filteredNews.map((news, index) => (
-              <Fragment key={news.id}>
-                {regionEventsCount > 0 && index === regionEventsCount && (
-                  <div className="region-separator">
-                    <span>В вашем регионе больше нет событий — далее другие регионы</span>
-                  </div>
-                )}
+          return (
+            <>
+              {/* Баннер если в регионе событий нет */}
+              {regionEventsCount === 0 && (
+                <div className="region-empty-banner">
+                  <span className="region-empty-icon">🗺️</span>
+                  <p><strong>В вашем регионе событий нет.</strong></p>
+                  <p>Ниже показаны события из других регионов:</p>
+                </div>
+              )}
 
-                <Link to={`/news/${news.id}`} className="news-card" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="news-card-image" style={{ position: 'relative' }}>
-                    <div className="news-image-placeholder">
-                      {news.category === 'olympiads' ? '🏆' : news.category === 'events' ? '📅' : news.category === 'scientific' ? '🔬' : '📰'}
+              {/* Сообщение, если все события уже прошли */}
+              {hasOnlyPast && (
+                <div className="region-empty-banner">
+                  <span className="region-empty-icon">📅</span>
+                  <p><strong>Все события уже завершились.</strong></p>
+                  <p>Ниже — архив прошедших мероприятий.</p>
+                </div>
+              )}
+
+              {/* БУДУЩИЕ события */}
+              {upcoming.map((news, index) => (
+                <Fragment key={news.id}>
+                  {regionEventsCount > 0 && index === regionEventsCount && (
+                    <div className="region-separator">
+                      <span>В вашем регионе больше нет событий — далее другие регионы</span>
                     </div>
-                    {(news.images?.[1] || news.image) && (
-                      <img
-                        src={news.images?.[1] || news.image}
-                        alt={news.title}
-                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={(e) => { e.currentTarget.style.display = 'none' }}
-                      />
-                    )}
-                  </div>
-                  <div className="news-card-content">
-                    <div className="news-card-meta">
-                      <span className="news-date">{formatDate(news.date)}</span>
-                      {(news.city || news.region) && (
-                        <span className="news-location">📍 {news.city || news.region}</span>
+                  )}
+                  <Link to={`/news/${news.id}`} className="news-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <div className="news-card-image" style={{ position: 'relative' }}>
+                      <div className="news-image-placeholder">
+                        {news.category === 'olympiads' ? '🏆' : news.category === 'events' ? '📅' : news.category === 'scientific' ? '🔬' : '📰'}
+                      </div>
+                      {(news.images?.[1] || news.image) && (
+                        <img
+                          src={news.images?.[1] || news.image}
+                          alt={news.title}
+                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => { e.currentTarget.style.display = 'none' }}
+                        />
                       )}
                     </div>
-                    <h2 className="news-card-title">{news.title}</h2>
-                    <p className="news-card-description">{news.shortDescription}</p>
-                    <div className="news-card-footer">
-                      <span className="read-more-btn">Читать дальше →</span>
+                    <div className="news-card-content">
+                      <div className="news-card-meta">
+                        <span className="news-date">{formatDate(news.date)}</span>
+                        {(news.city || news.region) && (
+                          <span className="news-location">📍 {news.city || news.region}</span>
+                        )}
+                      </div>
+                      <h2 className="news-card-title">{news.title}</h2>
+                      <p className="news-card-description">{news.shortDescription}</p>
+                      <div className="news-card-footer">
+                        <span className="read-more-btn">Читать дальше →</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </Fragment>
-            ))}
-          </>
-        )}
+                  </Link>
+                </Fragment>
+              ))}
+
+              {/* КНОПКА "ПОКАЗАТЬ ПРОШЕДШИЕ" */}
+              {newsFilter === 'events' && past.length > 0 && (
+                <button
+                  className="past-events-toggle"
+                  onClick={() => setShowPastEvents(!showPastEvents)}
+                >
+                  <span className="past-events-toggle-text">
+                    {showPastEvents ? 'Скрыть' : 'Показать'} прошедшие события
+                  </span>
+                  <span className="past-events-toggle-count">{past.length}</span>
+                  <span className={`past-events-toggle-arrow ${showPastEvents ? 'up' : ''}`}>
+                    {showPastEvents ? '↑' : '↓'}
+                  </span>
+                </button>
+              )}
+
+              {/* ПРОШЕДШИЕ события */}
+              {newsFilter === 'events' && showPastEvents && (
+                <div className="past-events-wrapper">
+                  <div className="past-events-label">Архив событий</div>
+                  {past.map(news => (
+                    <Link
+                      key={news.id}
+                      to={`/news/${news.id}`}
+                      className="news-card news-card-past"
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <div className="news-card-image" style={{ position: 'relative' }}>
+                        <div className="news-image-placeholder">📅</div>
+                        {(news.images?.[1] || news.image) && (
+                          <img
+                            src={news.images?.[1] || news.image}
+                            alt={news.title}
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => { e.currentTarget.style.display = 'none' }}
+                          />
+                        )}
+                        <div className="past-event-badge">✓ Завершено</div>
+                      </div>
+                      <div className="news-card-content">
+                        <div className="news-card-meta">
+                          <span className="news-date">{formatDate(news.date)}</span>
+                          {(news.city || news.region) && (
+                            <span className="news-location">📍 {news.city || news.region}</span>
+                          )}
+                        </div>
+                        <h2 className="news-card-title">{news.title}</h2>
+                        <p className="news-card-description">{news.shortDescription}</p>
+                        <div className="news-card-footer">
+                          <span className="read-more-btn">Читать дальше →</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </>
+          )
+        })()}
       </div>
     </main>
   )
@@ -1427,7 +1522,7 @@ const ContactsPage = () => {
       <button className="back-button" onClick={() => navigate(-1)}>← Назад</button>
 
       <h1 className="page-title">Контакты</h1>
-      <p className="page-subtitle">Мы всегда на связи!</p>
+      <p className="page-subtitle">Всегда на связи!</p>
 
       <div className="contacts-grid">
         {/* Телеграм */}
@@ -1876,7 +1971,6 @@ const AboutPage = () => {
     </main>
   )
 }
-
 // ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
 // ============================================
