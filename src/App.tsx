@@ -1021,7 +1021,7 @@ const Header = ({
       <nav className="header-center">
         <Link className={`nav-link ${isActive('/') ? 'nav-active' : ''}`} to="/">Главная</Link>
         <Link className={`nav-link ${isActive('/materials') ? 'nav-active' : ''}`} to="/materials">Материалы</Link>
-        <button className="nav-link" onClick={() => openModal('Форум')}>Форум</button>
+        <Link className={`nav-link ${isActive('/news/olympiads') ? 'nav-active' : ''}`} to="/news/olympiads">Олимпиады</Link>
         <button className="nav-link" onClick={() => openModal('Тренажёр')}>Тренажёр</button>
         <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <Link className={`nav-link ${isActive('/services') ? 'nav-active' : ''}`} to="/services">Услуги</Link>
@@ -1081,16 +1081,16 @@ const Header = ({
 // ============================================
 // ГЛАВНАЯ СТРАНИЦА
 // ============================================
-const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string) => void; openSocial: (p: 'max' | 'tg') => void; openSecret: () => void }) => {
+const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; openSocial: (p: 'max' | 'tg') => void }) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
 
   const cards = [
     { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#4F7DF5', link: '/materials' },
-    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, события, новости в мире физики', color: '#10B981', link: '/news' },
-    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EC4899', action: () => openModal('Форум') },
-    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
-    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и улучшайте навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
-    { id: 'secret', icon: '🔮', title: '?', description: 'Секретный раздел — скоро раскроем', color: '#64748B', action: openSecret, secret: true },
+    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
+    { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#F59E0B', link: '/news/olympiads' },
+    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#EC4899', link: '/services' },
+    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
+    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#64748B', action: () => openModal('Форум') },
   ]
 
   return (
@@ -1114,7 +1114,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
           const Inner = (
             <>
               <div className="bento-icon">{card.icon}</div>
-              <h3 className={`bento-title ${card.secret ? 'bento-title-secret' : ''}`}>{card.title}</h3>
+              <h3 className="bento-title">{card.title}</h3>
               <p className="bento-desc">{card.description}</p>
               <div className="bento-arrow">→</div>
             </>
@@ -1125,7 +1125,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
               <Link
                 key={card.id}
                 to={card.link}
-                className={`bento-card ${card.secret ? 'bento-card-secret' : ''}`}
+                className="bento-card"
                 style={{ '--accent': card.color, textDecoration: 'none' } as CSSProperties}
               >
                 {Inner}
@@ -1136,7 +1136,7 @@ const HomePage = ({ openModal, openSocial, openSecret }: { openModal: (t: string
           return (
             <button
               key={card.id}
-              className={`bento-card ${card.secret ? 'bento-card-secret' : ''}`}
+              className="bento-card"
               style={{ '--accent': card.color } as CSSProperties}
               onClick={card.action}
             >
@@ -2150,7 +2150,6 @@ const AppContent = () => {
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
   const [socialModal, setSocialModal] = useState<'max' | 'tg' | null>(null)
   const [socialCopied, setSocialCopied] = useState(false)
-  const [secretOpen, setSecretOpen] = useState(false)
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
@@ -2222,7 +2221,7 @@ const AppContent = () => {
       />
 
       <Routes>
-        <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} openSecret={() => setSecretOpen(true)} />} />
+        <Route path="/" element={<HomePage openModal={openModal} openSocial={openSocial} />} />
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
@@ -2295,25 +2294,6 @@ const AppContent = () => {
         onAccept={acceptCookies}
         onMore={() => navigate('/privacy')}
       />
-
-      {/* СЕКРЕТНАЯ МОДАЛКА */}
-      {secretOpen && (
-        <div className="modal-overlay" onClick={() => setSecretOpen(false)}>
-          <div className="modal-content secret-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSecretOpen(false)}>✕</button>
-            <div className="secret-emoji">🔮</div>
-            <h2 className="modal-title">Тсс… это секрет!</h2>
-            <p className="modal-text">
-              Здесь появится <span className="highlight">что-то особенное</span> —
-              совсем скоро. Следи за обновлениями и будь первым, кто узнает!
-            </p>
-            <p className="modal-subtext">Рассказывай друзьям про Физикум — чем больше нас, тем скорее откроем секрет ✨</p>
-            <button className="btn btn-primary btn-large" onClick={() => setSecretOpen(false)}>
-              Понял, буду ждать!
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* МАЛЕНЬКОЕ ОКНО СОЦСЕТЕЙ */}
       {socialModal && (
