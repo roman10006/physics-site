@@ -1025,6 +1025,7 @@ const Header = ({
         <button className="nav-link" onClick={() => openModal('Тренажёр')}>Тренажёр</button>
         <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <Link className={`nav-link ${isActive('/services') ? 'nav-active' : ''}`} to="/services">Услуги</Link>
+        <button className="nav-link" onClick={() => openModal('Форум')}>Форум</button>
       </nav>
 
       <div className="header-right">
@@ -1146,17 +1147,21 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
         })}
       </div>
 
-      {/* МЫ В СОЦСЕТЯХ — видное место на главной */}
-      <div className="social-section">
-        <h3 className="social-section-title">Физикум в соцсетях</h3>
-        <div className="social-buttons">
-          <button className="social-btn social-max" onClick={() => openSocial('max')}>
-            <span>💬</span> Физикум в MAX
-          </button>
-          <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
-            <span>✈️</span> Физикум в Телеграм
-          </button>
+      {/* Низ главной: соцсети слева, "В этот день" справа */}
+      <div className="home-bottom-row">
+        <div className="social-section">
+          <h3 className="social-section-title">Мы в соцсетях</h3>
+          <div className="social-buttons">
+            <button className="social-btn social-max" onClick={() => openSocial('max')}>
+              <span>💬</span> Физикум в MAX
+            </button>
+            <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
+              <span>✈️</span> Физикум в Телеграм
+            </button>
+          </div>
         </div>
+
+        <TodayCard />
       </div>
     </main>
   )
@@ -2132,6 +2137,149 @@ const AboutPage = () => {
     </main>
   )
 }
+
+// ============================================
+// РУБРИКА "В ЭТОТ ДЕНЬ"
+// ============================================
+interface TodayEvent {
+  id: number
+  month: number
+  day: number
+  year: number
+  title: string
+  short: string
+  full: string
+  image?: string
+  emoji: string
+}
+
+const todayEvents: TodayEvent[] = [
+  {
+    id: 1,
+    month: 9,
+    day: 19,
+    year: 1783,
+    title: 'Первые «пассажиры» воздушного шара',
+    short: 'У Версаля братья Монгольфье отправили в небо барана, петуха и утку — первых живых существ, полетевших на воздушном шаре.',
+    full: `19 сентября 1783 года на площади перед Версальским дворцом Жозеф-Мишель и Жак-Этьенн Монгольфье продемонстрировали первый полёт воздушного шара с живыми «пассажирами» на борту: бараном, петухом и уткой.
+
+Полёт длился около 8 минут: шар пролетел примерно 3 километра и благополучно приземлился. Барана выбрали за физиологическое сходство с человеком, петуха — как «контрольного» пассажира, не приспособленного к высоте, а утку, которая и так умеет летать высоко, — для сравнения.
+
+Физика полёта проста и красива: нагретый воздух легче холодного, поэтому на оболочку шара действует выталкивающая сила — закон Архимеда в действии. Именно этот опыт открыл дорогу первому полёту человека, который состоялся уже через два месяца, 21 ноября 1783 года.
+
+Интересный факт: за запуском наблюдал король Людовик XVI, а новость о успешном полёте облетела всю Европу за считанные дни — так началась эра воздухоплавания.`,
+    emoji: '🎈',
+  },
+  {
+    id: 2,
+    month: 9,
+    day: 19,
+    year: 1957,
+    title: 'Первое подземное ядерное испытание',
+    short: 'В США на глубине около 270 метров провели взрыв «Rainier» — начало эпохи подземных ядерных испытаний.',
+    full: `19 сентября 1957 года на Невадском испытательном полигоне (США) было проведено первое в мире подземное ядерное испытание «Rainier» в рамках операции Plumbbob.
+
+Заряд мощностью 1,7 килотонны взорвали в туннеле на глубине около 270 метров. В отличие от атмосферных взрывов, почти все радиоактивные продукты остались внутри полости в породе, что сделало испытание гораздо безопаснее для окружающей среды.
+
+Физика события: при взрыве порода мгновенно плавится и испаряется, образуя полость; остывая, она обрушается, формируя подземный провал. Сейсмические волны от взрыва записали станции по всему миру — так родились методы сейсмического контроля ядерных испытаний, которые и сегодня позволяют обнаруживать скрытые взрывы.
+
+Именно подземные испытания стали основной формой ядерных испытаний после Московского договора 1963 года, запретившего взрывы в атмосфере, космосе и под водой.`,
+    emoji: '☢️',
+  },
+]
+
+// Карточка "В этот день" на главной
+const TodayCard = () => {
+  const navigate = useNavigate()
+  const now = new Date()
+  const events = todayEvents.filter(e => e.month === now.getMonth() + 1 && e.day === now.getDate())
+  const dateLabel = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+
+  return (
+    <div className="today-card">
+      <div className="today-card-header">
+        <span className="today-card-icon">📅</span>
+        <div>
+          <h3 className="today-card-title">В этот день</h3>
+          <span className="today-card-date">{dateLabel}</span>
+        </div>
+      </div>
+
+      {events.length === 0 ? (
+        <p className="today-card-empty">Записи за этот день готовятся — совсем скоро здесь появятся события из истории физики!</p>
+      ) : (
+        events.map(ev => (
+          <button key={ev.id} className="today-event" onClick={() => navigate(`/today/${ev.id}`)}>
+            <div className="today-event-emoji">{ev.emoji}</div>
+            <div className="today-event-content">
+              <span className="today-event-year">{ev.year} год</span>
+              <h4 className="today-event-title">{ev.title}</h4>
+              <p className="today-event-short">{ev.short}</p>
+              <span className="today-event-more">Читать дальше →</span>
+            </div>
+          </button>
+        ))
+      )}
+    </div>
+  )
+}
+
+// Страница записи "В этот день"
+const TodayDetailPage = () => {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const ev = todayEvents.find(e => e.id === Number(id))
+
+  useEffect(() => {
+    document.title = ev ? `${ev.title} — В этот день — Физикум` : 'В этот день — Физикум'
+  }, [ev])
+
+  if (!ev) {
+    return (
+      <main className="page">
+        <div className="empty-state">
+          <div className="empty-emoji">📅</div>
+          <h2>Запись не найдена</h2>
+          <p>Возможно, она ещё не добавлена в базу.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/')}>На главную</button>
+        </div>
+      </main>
+    )
+  }
+
+  const dateLabel = new Date(2026, ev.month - 1, ev.day).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+
+  return (
+    <main className="page">
+      <button className="back-button" onClick={() => navigate(-1)}>← Назад</button>
+
+      <article className="news-detail">
+        <div className="news-detail-header">
+          <span className="news-date-large">📅 {dateLabel} {ev.year} года</span>
+        </div>
+
+        <h1 className="news-detail-title">{ev.emoji} {ev.title}</h1>
+
+        {ev.image && (
+          <figure className="news-figure">
+            <img src={ev.image} alt={ev.title} />
+          </figure>
+        )}
+
+        <div className="news-detail-body">
+          {ev.full.split(/\n{2,}/).map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+      </article>
+    </main>
+  )
+}
+
+// ============================================
+// ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
+// ============================================
+
 // ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
 // ============================================
@@ -2225,6 +2373,7 @@ const AppContent = () => {
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
+        <Route path="/today/:id" element={<TodayDetailPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/about" element={<AboutPage />} />

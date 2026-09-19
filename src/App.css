@@ -2688,3 +2688,132 @@ body {
   z-index: 2;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
+/* ============ РУБРИКА "В ЭТОТ ДЕНЬ" ============ */
+.home-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 70px auto 0;
+  align-items: stretch;
+}
+
+.home-bottom-row .social-section {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.today-card {
+  background: linear-gradient(135deg, rgba(79, 125, 245, 0.08), rgba(236, 72, 153, 0.08));
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: var(--transition);
+}
+
+.today-card:hover {
+  border-color: var(--accent-purple);
+  box-shadow: 0 15px 50px rgba(139, 92, 246, 0.15);
+}
+
+.today-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.today-card-icon {
+  font-size: 2rem;
+}
+
+.today-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.today-card-date {
+  color: var(--accent-purple);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.today-card-empty {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.today-event {
+  display: flex;
+  gap: 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+  font-family: inherit;
+  color: var(--text-primary);
+}
+
+.today-event:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-purple);
+  background: var(--bg-card-hover);
+}
+
+.today-event-emoji {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+
+.today-event-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.today-event-year {
+  align-self: flex-start;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  color: white;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.today-event-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.today-event-short {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.today-event-more {
+  color: var(--accent-purple);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .home-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
