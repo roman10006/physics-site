@@ -2691,27 +2691,28 @@ body {
 
 /* ============ РУБРИКА "В ЭТОТ ДЕНЬ" ============ */
 .home-layout {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 40px 32px 60px;
+  position: relative;
+  width: 100%;
 }
 
-.home-layout-with-sidebar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 520px;
-  gap: 44px;
-  align-items: start;
+/* Большие экраны (как у тебя): главные кнопки по центру экрана,
+   а виджет висит у самого правого края */
+@media (min-width: 2100px) {
+  .today-sidebar {
+    position: absolute;
+    top: 60px;
+    right: 24px;
+    width: 400px;
+  }
 }
 
-.home-layout .hero {
-  max-width: 100%;
-  margin: 0;
-  padding: 20px 0 0;
-}
-
-.today-sidebar {
-  position: sticky;
-  top: 90px;
+/* Экраны поменьше: виджет уходит под контент, чтобы не перекрывать кнопки */
+@media (max-width: 2099px) {
+  .today-sidebar {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto 60px;
+  }
 }
 
 /* Виджет-карусель */
@@ -2928,20 +2929,7 @@ body {
   margin-bottom: 14px;
 }
 
-/* Адаптив */
-@media (max-width: 1200px) {
-  .home-layout-with-sidebar {
-    grid-template-columns: 1fr;
-  }
-
-  .today-sidebar {
-    position: static;
-    max-width: 640px;
-    margin: 40px auto 0;
-    width: 100%;
-  }
-}
-
+/* Мобильные правки */
 @media (max-width: 640px) {
   .today-page-card {
     grid-template-columns: 1fr;
