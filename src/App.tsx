@@ -794,6 +794,48 @@ const newsData: NewsItem[] = [
     region: 'Московская область',
   },
 ]
+// ============================================
+// РУБРИКА "В ЭТОТ ДЕНЬ" (месяц: 1-12)
+// ============================================
+interface TodayEvent {
+  id: number
+  month: number
+  day: number
+  year: number
+  title: string
+  shortDescription: string
+  fullDescription: string
+  image?: string
+}
+
+const todayEventsData: TodayEvent[] = [
+  {
+    id: 1,
+    month: 9,
+    day: 20,
+    year: 1519,
+    title: 'Экспедиция Магеллана отправилась в первое кругосветное плавание',
+    shortDescription: 'Флотилия из пяти кораблей вышла из порта Санлукар-де-Баррамеда — началось путешествие, доказавшее шарообразность Земли.',
+    fullDescription: '20 сентября 1519 года флотилия из пяти кораблей под командованием Фернана Магеллана вышла из испанского порта Санлукар-де-Баррамеда. Экспедиция, задуманная как поиск западного пути к Островам пряностей, завершилась первым в истории кругосветным плаванием: из 265 отправившихся моряков домой в 1522 году вернулись лишь 18 на одном корабле «Виктория». Это путешествие стало практическим доказательством шарообразности Земли и единства Мирового океана — выводов, которые навсегда изменили географию, астрономию и всё естествознание.',
+    image: '/images/magellan.jpg',
+  },
+  {
+    id: 2,
+    month: 9,
+    day: 20,
+    year: 1842,
+    title: 'Родился Джеймс Дьюар — изобретатель «термоса»',
+    shortDescription: 'Шотландский физик и химик создал вакуумную колбу и первым получил жидкий водород.',
+    fullDescription: '20 сентября 1842 года родился шотландский физик и химик Джеймс Дьюар. Он первым сжижил водород и получил его в твёрдом виде, а для хранения криогенных жидкостей изобрёл сосуд с двойными стенками и откачанным между ними воздухом — вакуумную колбу Дьюара. Именно она стала прообразом обычного бытового термоса, который сегодня есть в каждом доме. Колбы Дьюара до сих пор используются в научных лабораториях всего мира для работы с жидким азотом и другими криогенными жидкостями.',
+    image: '/images/dewar.jpg',
+  },
+]
+
+// События именно за сегодняшнюю дату
+const getTodayEvents = () => {
+  const now = new Date()
+  return todayEventsData.filter(e => e.month === now.getMonth() + 1 && e.day === now.getDate())
+}
 
 
 // ============================================
@@ -1094,8 +1136,11 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#64748B', action: () => openModal('Форум') },
   ]
 
+  const hasToday = getTodayEvents().length > 0
+
   return (
-    <main className="hero">
+    <div className={hasToday ? 'home-layout home-layout-with-sidebar' : 'home-layout'}>
+      <main className="hero">
       {/* Баннер обратной связи */}
       <div className="feedback-banner">
         <span className="feedback-icon">💡</span>
@@ -1147,23 +1192,27 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
         })}
       </div>
 
-      {/* Низ главной: соцсети слева, "В этот день" справа */}
-      <div className="home-bottom-row">
-        <div className="social-section">
-          <h3 className="social-section-title">Мы в соцсетях</h3>
-          <div className="social-buttons">
-            <button className="social-btn social-max" onClick={() => openSocial('max')}>
-              <span>💬</span> Физикум в MAX
-            </button>
-            <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
-              <span>✈️</span> Физикум в Телеграм
-            </button>
-          </div>
+      {/* МЫ В СОЦСЕТЯХ — видное место на главной */}
+      <div className="social-section">
+        <h3 className="social-section-title">Мы в соцсетях</h3>
+        <div className="social-buttons">
+          <button className="social-btn social-max" onClick={() => openSocial('max')}>
+            <span>💬</span> Физикум в MAX
+          </button>
+          <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
+            <span>✈️</span> Физикум в Телеграм
+          </button>
         </div>
-
-        <TodayCard />
       </div>
-    </main>
+      </main>
+
+      {/* РУБРИКА "В ЭТОТ ДЕНЬ" — справа */}
+      {hasToday && (
+        <aside className="today-sidebar">
+          <TodayWidget />
+        </aside>
+      )}
+    </div>
   )
 }
 
@@ -2137,149 +2186,127 @@ const AboutPage = () => {
     </main>
   )
 }
-
 // ============================================
-// РУБРИКА "В ЭТОТ ДЕНЬ"
+// ВИДЖЕТ "В ЭТОТ ДЕНЬ" (карусель справа на главной)
 // ============================================
-interface TodayEvent {
-  id: number
-  month: number
-  day: number
-  year: number
-  title: string
-  short: string
-  full: string
-  image?: string
-  emoji: string
-}
-
-const todayEvents: TodayEvent[] = [
-  {
-    id: 1,
-    month: 9,
-    day: 19,
-    year: 1783,
-    title: 'Первые «пассажиры» воздушного шара',
-    short: 'У Версаля братья Монгольфье отправили в небо барана, петуха и утку — первых живых существ, полетевших на воздушном шаре.',
-    full: `19 сентября 1783 года на площади перед Версальским дворцом Жозеф-Мишель и Жак-Этьенн Монгольфье продемонстрировали первый полёт воздушного шара с живыми «пассажирами» на борту: бараном, петухом и уткой.
-
-Полёт длился около 8 минут: шар пролетел примерно 3 километра и благополучно приземлился. Барана выбрали за физиологическое сходство с человеком, петуха — как «контрольного» пассажира, не приспособленного к высоте, а утку, которая и так умеет летать высоко, — для сравнения.
-
-Физика полёта проста и красива: нагретый воздух легче холодного, поэтому на оболочку шара действует выталкивающая сила — закон Архимеда в действии. Именно этот опыт открыл дорогу первому полёту человека, который состоялся уже через два месяца, 21 ноября 1783 года.
-
-Интересный факт: за запуском наблюдал король Людовик XVI, а новость о успешном полёте облетела всю Европу за считанные дни — так началась эра воздухоплавания.`,
-    emoji: '🎈',
-  },
-  {
-    id: 2,
-    month: 9,
-    day: 19,
-    year: 1957,
-    title: 'Первое подземное ядерное испытание',
-    short: 'В США на глубине около 270 метров провели взрыв «Rainier» — начало эпохи подземных ядерных испытаний.',
-    full: `19 сентября 1957 года на Невадском испытательном полигоне (США) было проведено первое в мире подземное ядерное испытание «Rainier» в рамках операции Plumbbob.
-
-Заряд мощностью 1,7 килотонны взорвали в туннеле на глубине около 270 метров. В отличие от атмосферных взрывов, почти все радиоактивные продукты остались внутри полости в породе, что сделало испытание гораздо безопаснее для окружающей среды.
-
-Физика события: при взрыве порода мгновенно плавится и испаряется, образуя полость; остывая, она обрушается, формируя подземный провал. Сейсмические волны от взрыва записали станции по всему миру — так родились методы сейсмического контроля ядерных испытаний, которые и сегодня позволяют обнаруживать скрытые взрывы.
-
-Именно подземные испытания стали основной формой ядерных испытаний после Московского договора 1963 года, запретившего взрывы в атмосфере, космосе и под водой.`,
-    emoji: '☢️',
-  },
-]
-
-// Карточка "В этот день" на главной
-const TodayCard = () => {
+const TodayWidget = () => {
   const navigate = useNavigate()
-  const now = new Date()
-  const events = todayEvents.filter(e => e.month === now.getMonth() + 1 && e.day === now.getDate())
-  const dateLabel = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+  const events = getTodayEvents()
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  // Автопролистывание каждые 7 секунд (пауза при наведении)
+  useEffect(() => {
+    if (events.length < 2 || paused) return
+    const t = setInterval(() => setIndex(i => (i + 1) % events.length), 7000)
+    return () => clearInterval(t)
+  }, [events.length, paused])
+
+  if (events.length === 0) return null
+
+  const event = events[index % events.length]
+  const dateLabel = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
 
   return (
-    <div className="today-card">
-      <div className="today-card-header">
-        <span className="today-card-icon">📅</span>
+    <div
+      className="today-widget"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="today-widget-header">
+        <span className="today-widget-icon">📅</span>
         <div>
-          <h3 className="today-card-title">В этот день</h3>
-          <span className="today-card-date">{dateLabel}</span>
+          <h3 className="today-widget-title">В этот день</h3>
+          <span className="today-widget-date">{dateLabel}</span>
         </div>
       </div>
 
-      {events.length === 0 ? (
-        <p className="today-card-empty">Записи за этот день готовятся — совсем скоро здесь появятся события из истории физики!</p>
-      ) : (
-        events.map(ev => (
-          <button key={ev.id} className="today-event" onClick={() => navigate(`/today/${ev.id}`)}>
-            <div className="today-event-emoji">{ev.emoji}</div>
-            <div className="today-event-content">
-              <span className="today-event-year">{ev.year} год</span>
-              <h4 className="today-event-title">{ev.title}</h4>
-              <p className="today-event-short">{ev.short}</p>
-              <span className="today-event-more">Читать дальше →</span>
-            </div>
-          </button>
-        ))
+      <div className="today-widget-body" key={event.id}>
+        {event.image && (
+          <img
+            className="today-widget-img"
+            src={event.image}
+            alt={event.title}
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          />
+        )}
+        <div className="today-widget-year">{event.year}</div>
+        <h4 className="today-widget-event-title">{event.title}</h4>
+        <p className="today-widget-desc">{event.shortDescription}</p>
+        <button className="today-widget-more" onClick={() => navigate('/today')}>
+          Читать дальше →
+        </button>
+      </div>
+
+      {events.length > 1 && (
+        <div className="today-widget-nav">
+          <button className="today-widget-arrow" onClick={() => setIndex(i => (i - 1 + events.length) % events.length)}>‹</button>
+          <div className="today-widget-dots">
+            {events.map((_, i) => (
+              <button
+                key={i}
+                className={`today-dot ${i === index % events.length ? 'today-dot-active' : ''}`}
+                onClick={() => setIndex(i)}
+                aria-label={`Событие ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button className="today-widget-arrow" onClick={() => setIndex(i => (i + 1) % events.length)}>›</button>
+        </div>
       )}
     </div>
   )
 }
 
-// Страница записи "В этот день"
-const TodayDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
+// ============================================
+// СТРАНИЦА РУБРИКИ "В ЭТОТ ДЕНЬ"
+// ============================================
+const TodayPage = () => {
   const navigate = useNavigate()
-  const ev = todayEvents.find(e => e.id === Number(id))
+  const events = getTodayEvents()
+  const dateLabel = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
 
-  useEffect(() => {
-    document.title = ev ? `${ev.title} — В этот день — Физикум` : 'В этот день — Физикум'
-  }, [ev])
-
-  if (!ev) {
-    return (
-      <main className="page">
-        <div className="empty-state">
-          <div className="empty-emoji">📅</div>
-          <h2>Запись не найдена</h2>
-          <p>Возможно, она ещё не добавлена в базу.</p>
-          <button className="btn btn-primary" onClick={() => navigate('/')}>На главную</button>
-        </div>
-      </main>
-    )
-  }
-
-  const dateLabel = new Date(2026, ev.month - 1, ev.day).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+  useEffect(() => { document.title = `В этот день — ${dateLabel} — Физикум` }, [dateLabel])
 
   return (
     <main className="page">
-      <button className="back-button" onClick={() => navigate(-1)}>← Назад</button>
+      <button className="back-button" onClick={() => navigate('/')}>← На главную</button>
 
-      <article className="news-detail">
-        <div className="news-detail-header">
-          <span className="news-date-large">📅 {dateLabel} {ev.year} года</span>
+      <h1 className="page-title">
+        В этот день — <span className="gradient-text">{dateLabel}</span>
+      </h1>
+      <p className="page-subtitle">Исторические события науки и физики, произошедшие в этот день</p>
+
+      {events.length === 0 ? (
+        <div className="news-empty">
+          <div className="news-empty-emoji">📅</div>
+          <h3>Пока нет событий для этой даты</h3>
+          <p>База рубрики «В этот день» пополняется — скоро здесь появится запись!</p>
         </div>
-
-        <h1 className="news-detail-title">{ev.emoji} {ev.title}</h1>
-
-        {ev.image && (
-          <figure className="news-figure">
-            <img src={ev.image} alt={ev.title} />
-          </figure>
-        )}
-
-        <div className="news-detail-body">
-          {ev.full.split(/\n{2,}/).map((p, i) => (
-            <p key={i}>{p}</p>
+      ) : (
+        <div className="today-page-list">
+          {events.map(ev => (
+            <article key={ev.id} className="today-page-card">
+              <div className="today-page-year">{ev.year}</div>
+              <div className="today-page-content">
+                <h2>{ev.title}</h2>
+                {ev.image && (
+                  <img
+                    className="today-page-img"
+                    src={ev.image}
+                    alt={ev.title}
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
+                )}
+                <p>{ev.fullDescription}</p>
+              </div>
+            </article>
           ))}
         </div>
-      </article>
+      )}
     </main>
   )
 }
-
-// ============================================
-// ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
-// ============================================
-
 // ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
 // ============================================
@@ -2373,9 +2400,9 @@ const AppContent = () => {
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
-        <Route path="/today/:id" element={<TodayDetailPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
+        <Route path="/today" element={<TodayPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsPage />} />

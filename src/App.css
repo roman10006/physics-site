@@ -2689,131 +2689,261 @@ body {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 /* ============ РУБРИКА "В ЭТОТ ДЕНЬ" ============ */
-.home-bottom-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  max-width: 1000px;
-  margin: 70px auto 0;
-  align-items: stretch;
+.home-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
 }
 
-.home-bottom-row .social-section {
-  margin-top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.home-layout-with-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: start;
+}
+
+.home-layout .hero {
+  max-width: 100%;
+  margin: 0;
+  padding: 20px 0 0;
+}
+
+.today-sidebar {
+  position: sticky;
+  top: 90px;
+}
+
+/* Виджет-карусель */
+.today-widget {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 24px;
-  padding: 32px;
+  padding: 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
 }
 
-.today-card {
-  background: linear-gradient(135deg, rgba(79, 125, 245, 0.08), rgba(236, 72, 153, 0.08));
-  border: 1px solid rgba(139, 92, 246, 0.35);
-  border-radius: 24px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: var(--transition);
+.today-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
 }
 
-.today-card:hover {
-  border-color: var(--accent-purple);
-  box-shadow: 0 15px 50px rgba(139, 92, 246, 0.15);
-}
-
-.today-card-header {
+.today-widget-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 18px;
 }
 
-.today-card-icon {
+.today-widget-icon {
   font-size: 2rem;
+  filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.5));
 }
 
-.today-card-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+.today-widget-title {
+  font-size: 1.25rem;
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 
-.today-card-date {
+.today-widget-date {
   color: var(--accent-purple);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.today-card-empty {
+.today-widget-body {
+  animation: fadeInUp 0.5s ease;
+}
+
+.today-widget-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, rgba(79, 125, 245, 0.15), rgba(236, 72, 153, 0.15));
+}
+
+.today-widget-year {
+  display: inline-block;
+  font-size: 1.7rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.today-widget-event-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.today-widget-desc {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.today-event {
-  display: flex;
-  gap: 14px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
+.today-widget-more {
+  background: none;
+  border: none;
+  color: var(--accent-purple);
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
-  text-align: left;
-  transition: var(--transition);
+  padding: 0;
   font-family: inherit;
-  color: var(--text-primary);
+  transition: var(--transition);
 }
 
-.today-event:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-purple);
-  background: var(--bg-card-hover);
+.today-widget-more:hover {
+  color: var(--accent-pink);
+  transform: translateX(4px);
 }
 
-.today-event-emoji {
-  font-size: 2.2rem;
-  flex-shrink: 0;
-}
-
-.today-event-content {
+.today-widget-nav {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.today-widget-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: var(--transition);
+}
+
+.today-widget-arrow:hover {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  color: white;
+  border-color: transparent;
+}
+
+.today-widget-dots {
+  display: flex;
   gap: 6px;
 }
 
-.today-event-year {
-  align-self: flex-start;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  color: white;
-  padding: 3px 10px;
+.today-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
+  border: none;
+  background: var(--border-strong);
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
 }
 
-.today-event-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
+.today-dot-active {
+  width: 22px;
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
 }
 
-.today-event-short {
+/* Страница рубрики */
+.today-page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.today-page-card {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  transition: var(--transition);
+}
+
+.today-page-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.12);
+}
+
+.today-page-year {
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  align-self: start;
+}
+
+.today-page-content h2 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.today-page-content p {
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  line-height: 1.75;
 }
 
-.today-event-more {
-  color: var(--accent-purple);
-  font-size: 0.85rem;
-  font-weight: 600;
+.today-page-img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 14px;
 }
 
-@media (max-width: 900px) {
-  .home-bottom-row {
+/* Адаптив */
+@media (max-width: 1100px) {
+  .home-layout-with-sidebar {
     grid-template-columns: 1fr;
+  }
+
+  .today-sidebar {
+    position: static;
+    max-width: 560px;
+    margin: 40px auto 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .today-page-card {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 22px;
   }
 }
