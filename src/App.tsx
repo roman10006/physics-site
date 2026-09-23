@@ -1063,7 +1063,7 @@ const Header = ({
       <nav className="header-center">
         <Link className={`nav-link ${isActive('/') ? 'nav-active' : ''}`} to="/">Главная</Link>
         <Link className={`nav-link ${isActive('/materials') ? 'nav-active' : ''}`} to="/materials">Материалы</Link>
-        <Link className={`nav-link ${isActive('/news/olympiads') ? 'nav-active' : ''}`} to="/news/olympiads">Олимпиады</Link>
+        <Link className={`nav-link ${isActive('/olympiads') ? 'nav-active' : ''}`} to="/olympiads">Олимпиады</Link>
         <button className="nav-link" onClick={() => openModal('Тренажёр')}>Тренажёр</button>
         <Link className={`nav-link ${isActive('/news') ? 'nav-active' : ''}`} to="/news">Новости</Link>
         <Link className={`nav-link ${isActive('/services') ? 'nav-active' : ''}`} to="/services">Услуги</Link>
@@ -1130,7 +1130,7 @@ const HomePage = ({ openModal, openSocial }: { openModal: (t: string) => void; o
   const cards = [
     { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#4F7DF5', link: '/materials' },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
-    { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#F59E0B', link: '/news/olympiads' },
+    { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#F59E0B', link: '/olympiads' },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#EC4899', link: '/services' },
     { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#64748B', action: () => openModal('Форум') },
@@ -2308,6 +2308,341 @@ const TodayPage = () => {
   )
 }
 // ============================================
+// ОЛИМПИАДЫ — каталог с фильтрами
+// ============================================
+interface Olympiad {
+  id: number
+  title: string
+  subject: string
+  level: string
+  gradesMin: number
+  gradesMax: number
+  season: string
+  format: string
+  status: string
+  registrationOpen: boolean
+  hasFutureEvents: boolean
+  nextAction: string
+  universities?: number
+  checked: string
+  keyDates?: { date: string; label: string }[]
+}
+
+// СТАРТОВАЯ БАЗА (заменим на точную, когда пришлёшь свою)
+const olympiadsData: Olympiad[] = [
+  {
+    id: 1,
+    title: 'Всероссийская олимпиада школьников (ВсОШ) по физике',
+    subject: 'физика',
+    level: 'I',
+    gradesMin: 7,
+    gradesMax: 11,
+    season: '2026/27',
+    format: 'Очно',
+    status: 'Подтверждено',
+    registrationOpen: true,
+    hasFutureEvents: true,
+    nextAction: 'Школьный этап — сентябрь-октябрь 2026',
+    checked: '20 сентября 2026',
+    keyDates: [
+      { date: '2026-09-20', label: 'Школьный этап (старт сезона)' },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Национальная технологическая олимпиада (НТО)',
+    subject: 'технология',
+    level: 'II',
+    gradesMin: 5,
+    gradesMax: 11,
+    season: '2026/27',
+    format: 'Онлайн',
+    status: 'Подтверждено',
+    registrationOpen: true,
+    hasFutureEvents: true,
+    nextAction: 'Регистрация до 9 декабря 2026',
+    checked: '20 сентября 2026',
+    keyDates: [
+      { date: '2026-10-20', label: 'Отборочный онлайн-этап (юниоры)' },
+      { date: '2026-12-09', label: 'Конец регистрации (юниоры)' },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Олимпиада школьников «Физтех» (математика, физика)',
+    subject: 'физика',
+    level: 'I',
+    gradesMin: 9,
+    gradesMax: 11,
+    season: '2026/27',
+    format: 'Онлайн',
+    status: 'Подтверждено',
+    registrationOpen: true,
+    hasFutureEvents: true,
+    nextAction: 'Регистрация открыта с 7 сентября 10:00 МСК',
+    checked: '20 сентября 2026',
+    keyDates: [
+      { date: '2026-09-07', label: 'Старт регистрации' },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Олимпиада школьников «Высшая проба»',
+    subject: 'мультипредметная',
+    level: 'I',
+    gradesMin: 7,
+    gradesMax: 11,
+    season: '2026/27',
+    format: 'Онлайн',
+    status: 'Подтверждено',
+    registrationOpen: true,
+    hasFutureEvents: true,
+    nextAction: 'Регистрация до 21 сентября 12:00 МСК',
+    checked: '20 сентября 2026',
+    keyDates: [
+      { date: '2026-09-21', label: 'Конец регистрации (до 12:00 мск)' },
+      { date: '2026-09-25', label: 'Первый тур отборочного этапа' },
+    ],
+  },
+]
+
+const olympiadPlural = (n: number) => {
+  const m = n % 100
+  if (m >= 11 && m <= 14) return 'олимпиад'
+  const d = n % 10
+  if (d === 1) return 'олимпиада'
+  if (d >= 2 && d <= 4) return 'олимпиады'
+  return 'олимпиад'
+}
+
+const subjectIcons: Record<string, string> = {
+  физика: '⚛️',
+  математика: '📐',
+  информатика: '💻',
+  технология: '🛠️',
+  мультипредметная: '🎯',
+}
+
+const OlympiadsPage = () => {
+  const [nameQuery, setNameQuery] = useState('')
+  const [subject, setSubject] = useState('all')
+  const [level, setLevel] = useState('all')
+  const [grade, setGrade] = useState('all')
+  const [season, setSeason] = useState('all')
+  const [format, setFormat] = useState('all')
+  const [sortBy, setSortBy] = useState('name')
+  const [onlyRegOpen, setOnlyRegOpen] = useState(false)
+  const [onlyFuture, setOnlyFuture] = useState(false)
+  const [calendarOpen, setCalendarOpen] = useState(false)
+
+  useEffect(() => { document.title = 'Олимпиады школьников — Физикум' }, [])
+
+  const subjects = Array.from(new Set(olympiadsData.map(o => o.subject)))
+  const seasons = Array.from(new Set(olympiadsData.map(o => o.season)))
+
+  const filtered = olympiadsData
+    .filter(o => {
+      if (nameQuery.trim() && !o.title.toLowerCase().includes(nameQuery.trim().toLowerCase())) return false
+      if (subject !== 'all' && o.subject !== subject) return false
+      if (level !== 'all' && o.level !== level) return false
+      if (grade !== 'all') {
+        const g = Number(grade)
+        if (g < o.gradesMin || g > o.gradesMax) return false
+      }
+      if (season !== 'all' && o.season !== season) return false
+      if (format !== 'all' && o.format !== format) return false
+      if (onlyRegOpen && !o.registrationOpen) return false
+      if (onlyFuture && !o.hasFutureEvents) return false
+      return true
+    })
+    .sort((a, b) => {
+      if (sortBy === 'level') return a.level.localeCompare(b.level)
+      if (sortBy === 'subject') return a.subject.localeCompare(b.subject, 'ru')
+      return a.title.localeCompare(b.title, 'ru')
+    })
+
+  const calendarDates = olympiadsData
+    .flatMap(o => (o.keyDates || []).map(d => ({ ...d, title: o.title })))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  const scrollToResults = () => {
+    document.getElementById('olympiads-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  return (
+    <main className="page olympiads-page">
+      {/* Хлебные крошки */}
+      <div className="olympiads-breadcrumbs">
+        <Link to="/">Главная</Link>
+        <span>/</span>
+        <span>Олимпиады</span>
+      </div>
+
+      <div className="olympiads-header">
+        <div>
+          <h1 className="olympiads-title">Олимпиады школьников</h1>
+          <p className="olympiads-subtitle">Профили, уровни, актуальные сроки и льготы университетов в одном каталоге</p>
+        </div>
+        <div className="olympiads-header-right">
+          <div className="olympiads-count-badge">
+            <span>🎓</span>
+            <strong>{filtered.length}</strong>
+            <span>{olympiadPlural(filtered.length)}</span>
+          </div>
+          <button className="btn btn-primary" onClick={() => setCalendarOpen(true)}>
+            📅 Календарь
+          </button>
+        </div>
+      </div>
+
+      {/* Панель фильтров */}
+      <div className="olympiads-filters">
+        <div className="olympiads-filters-row">
+          <div className="olympiads-filter olympiads-filter-wide">
+            <label>Название</label>
+            <input
+              className="olympiads-input"
+              placeholder="Например, Высшая проба"
+              value={nameQuery}
+              onChange={e => setNameQuery(e.target.value)}
+            />
+          </div>
+          <div className="olympiads-filter">
+            <label>Предмет</label>
+            <select className="olympiads-select" value={subject} onChange={e => setSubject(e.target.value)}>
+              <option value="all">Все предметы</option>
+              {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div className="olympiads-filter">
+            <label>Уровень</label>
+            <select className="olympiads-select" value={level} onChange={e => setLevel(e.target.value)}>
+              <option value="all">Все уровни</option>
+              <option value="I">Уровень I</option>
+              <option value="II">Уровень II</option>
+              <option value="III">Уровень III</option>
+            </select>
+          </div>
+          <div className="olympiads-filter">
+            <label>Класс</label>
+            <select className="olympiads-select" value={grade} onChange={e => setGrade(e.target.value)}>
+              <option value="all">1-11</option>
+              {[5, 6, 7, 8, 9, 10, 11].map(g => <option key={g} value={g}>{g} класс</option>)}
+            </select>
+          </div>
+          <div className="olympiads-filter">
+            <label>Сезон</label>
+            <select className="olympiads-select" value={season} onChange={e => setSeason(e.target.value)}>
+              <option value="all">Все сезоны</option>
+              {seasons.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div className="olympiads-filters-row">
+          <div className="olympiads-filter">
+            <label>Формат</label>
+            <select className="olympiads-select" value={format} onChange={e => setFormat(e.target.value)}>
+              <option value="all">Все</option>
+              <option value="Очно">Очно</option>
+              <option value="Онлайн">Онлайн</option>
+              <option value="Гибрид">Гибрид</option>
+            </select>
+          </div>
+          <div className="olympiads-filter">
+            <label>Сортировка</label>
+            <select className="olympiads-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+              <option value="name">По названию</option>
+              <option value="level">По уровню</option>
+              <option value="subject">По предмету</option>
+            </select>
+          </div>
+          <label className="olympiads-checkbox">
+            <input type="checkbox" checked={onlyRegOpen} onChange={e => setOnlyRegOpen(e.target.checked)} />
+            Регистрация открыта
+          </label>
+          <label className="olympiads-checkbox">
+            <input type="checkbox" checked={onlyFuture} onChange={e => setOnlyFuture(e.target.checked)} />
+            Есть будущие события
+          </label>
+          <button className="btn btn-primary olympiads-search-btn" onClick={scrollToResults}>Найти</button>
+        </div>
+      </div>
+
+      {/* Карточки олимпиад */}
+      <div className="olympiads-grid" id="olympiads-results">
+        {filtered.length === 0 ? (
+          <div className="news-empty olympiads-empty">
+            <div className="news-empty-emoji">🎓</div>
+            <h3>Ничего не найдено</h3>
+            <p>Попробуй изменить фильтры — или подожди: база олимпиад скоро пополнится!</p>
+          </div>
+        ) : (
+          filtered.map(o => (
+            <article key={o.id} className="olympiad-card">
+              <div className="olympiad-card-top">
+                <div className="olympiad-icon">{subjectIcons[o.subject] || '🎓'}</div>
+                <h3 className="olympiad-title">{o.title}</h3>
+              </div>
+              <div className="olympiad-status">{o.status} · {o.season}</div>
+              <div className="olympiad-chips">
+                <span className="olympiad-chip">{o.subject}</span>
+                <span className="olympiad-chip olympiad-chip-level">Уровень {o.level}</span>
+                <span className="olympiad-chip">{o.gradesMin}-{o.gradesMax} класс</span>
+                <span className="olympiad-chip">{o.format}</span>
+              </div>
+              <div className="olympiad-next">
+                <span className="olympiad-next-label">Ближайшее действие</span>
+                <span className="olympiad-next-value">{o.nextAction}</span>
+              </div>
+              <div className="olympiad-footer">
+                <div>
+                  <span className="olympiad-footer-label">Вузов с льготами</span>
+                  <span className="olympiad-footer-value">{o.universities ?? '—'}</span>
+                </div>
+                <div>
+                  <span className="olympiad-footer-label">Проверено</span>
+                  <span className="olympiad-footer-value">{o.checked}</span>
+                </div>
+              </div>
+            </article>
+          ))
+        )}
+      </div>
+
+      {/* МОДАЛКА КАЛЕНДАРЯ */}
+      {calendarOpen && (
+        <div className="modal-overlay" onClick={() => setCalendarOpen(false)}>
+          <div className="modal-content olympiads-calendar-modal" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setCalendarOpen(false)}>✕</button>
+            <div className="modal-emoji">📅</div>
+            <h2 className="modal-title">Календарь олимпиад</h2>
+            <p className="modal-subtext">Ближайшие ключевые даты из базы олимпиад</p>
+            <div className="calendar-list">
+              {calendarDates.length === 0 ? (
+                <p className="calendar-empty">Пока нет дат — база олимпиад пополняется!</p>
+              ) : (
+                calendarDates.map((d, i) => (
+                  <div key={i} className="calendar-item">
+                    <span className="calendar-date">{formatDate(d.date)}</span>
+                    <div>
+                      <div className="calendar-label">{d.label}</div>
+                      <div className="calendar-title">{d.title}</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            <button className="btn btn-primary btn-large" onClick={() => setCalendarOpen(false)}>Понятно!</button>
+          </div>
+        </div>
+      )}
+    </main>
+  )
+}
+
+
+// ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
 // ============================================
 const AppContent = () => {
@@ -2400,6 +2735,7 @@ const AppContent = () => {
         <Route path="/news" element={<NewsListPage openModal={openModal} />} />
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
+        <Route path="/olympiads" element={<OlympiadsPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/today" element={<TodayPage />} />
