@@ -2951,7 +2951,9 @@ body {
 }
 /* ============ КАТАЛОГ ОЛИМПИАД ============ */
 .olympiads-page {
-  max-width: 1500px;
+  max-width: 100%;
+  width: 100%;
+  padding: 40px 56px 60px;
 }
 
 .olympiads-breadcrumbs {
@@ -3107,8 +3109,8 @@ body {
 /* Сетка карточек */
 .olympiads-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
 .olympiads-empty {
@@ -3306,5 +3308,10 @@ body {
 
   .olympiads-header {
     flex-direction: column;
+  }
+}
+@media (max-width: 768px) {
+  .olympiads-page {
+    padding: 32px 16px 40px;
   }
 }
