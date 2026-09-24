@@ -2951,8 +2951,9 @@ body {
 }
 /* ============ КАТАЛОГ ОЛИМПИАД ============ */
 .olympiads-page {
-  max-width: 100%;
+  max-width: 2300px;
   width: 100%;
+  margin: 0 auto;
   padding: 48px 80px 70px;
 }
 
@@ -3109,7 +3110,7 @@ body {
 /* Сетка карточек */
 .olympiads-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
 }
 
