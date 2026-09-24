@@ -2980,7 +2980,7 @@ body {
   align-items: flex-start;
   gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 28px;
+  margin-bottom: 40px;
 }
 
 .olympiads-title {
@@ -3025,12 +3025,13 @@ body {
 .olympiads-filters {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px;
+  border-radius: 28px;
+  padding: 36px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-bottom: 32px;
+  gap: 24px;
+  margin-bottom: 36px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.06);
 }
 
 .olympiads-filters-row {
@@ -3066,9 +3067,9 @@ body {
   background: var(--bg-primary);
   border: 1px solid var(--border);
   color: var(--text-primary);
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 0.95rem;
+  border-radius: 14px;
+  padding: 15px 18px;
+  font-size: 1rem;
   font-family: inherit;
   transition: var(--transition);
   width: 100%;
@@ -3084,15 +3085,21 @@ body {
 .olympiads-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  gap: 10px;
+  font-size: 0.92rem;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 12px 16px;
+  padding: 15px 20px;
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   user-select: none;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.olympiads-checkbox:hover {
+  border-color: var(--border-strong);
 }
 
 .olympiads-checkbox input {
@@ -3316,4 +3323,65 @@ body {
   .olympiads-page {
     padding: 32px 16px 40px;
   }
+}
+/* ============ ПОДСКАЗКИ НАЗВАНИЯ + СБРОС ============ */
+.olympiads-suggest-wrap {
+  position: relative;
+}
+
+.olympiads-suggest {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--cookie-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  z-index: 40;
+  max-height: 280px;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease;
+}
+
+.olympiads-suggest-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 13px 18px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.olympiads-suggest-item:last-child {
+  border-bottom: none;
+}
+
+.olympiads-suggest-item:hover {
+  background: rgba(79, 125, 245, 0.12);
+  color: var(--accent-blue);
+}
+
+.olympiads-reset-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 14px 10px;
+  transition: var(--transition);
+}
+
+.olympiads-reset-btn:hover {
+  color: var(--text-primary);
 }

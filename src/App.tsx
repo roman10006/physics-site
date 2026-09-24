@@ -2322,13 +2322,13 @@ interface Olympiad {
   status: string
   registrationOpen: boolean
   hasFutureEvents: boolean
+  rsoSh: boolean
   nextAction: string
   universities?: number
   checked: string
   keyDates?: { date: string; label: string }[]
 }
 
-// СТАРТОВАЯ БАЗА (заменим на точную, когда пришлёшь свою)
 const olympiadsData: Olympiad[] = [
   {
     id: 1,
@@ -2342,10 +2342,12 @@ const olympiadsData: Olympiad[] = [
     status: 'Подтверждено',
     registrationOpen: true,
     hasFutureEvents: true,
+    rsoSh: false,
     nextAction: 'Школьный этап — сентябрь-октябрь 2026',
     checked: '20 сентября 2026',
     keyDates: [
       { date: '2026-09-20', label: 'Школьный этап (старт сезона)' },
+      { date: '2026-11-10', label: 'Муниципальный этап (ориентировочно)' },
     ],
   },
   {
@@ -2360,6 +2362,7 @@ const olympiadsData: Olympiad[] = [
     status: 'Подтверждено',
     registrationOpen: true,
     hasFutureEvents: true,
+    rsoSh: true,
     nextAction: 'Регистрация до 9 декабря 2026',
     checked: '20 сентября 2026',
     keyDates: [
@@ -2379,6 +2382,7 @@ const olympiadsData: Olympiad[] = [
     status: 'Подтверждено',
     registrationOpen: true,
     hasFutureEvents: true,
+    rsoSh: true,
     nextAction: 'Регистрация открыта с 7 сентября 10:00 МСК',
     checked: '20 сентября 2026',
     keyDates: [
@@ -2397,6 +2401,7 @@ const olympiadsData: Olympiad[] = [
     status: 'Подтверждено',
     registrationOpen: true,
     hasFutureEvents: true,
+    rsoSh: true,
     nextAction: 'Регистрация до 21 сентября 12:00 МСК',
     checked: '20 сентября 2026',
     keyDates: [
@@ -2422,6 +2427,15 @@ const subjectIcons: Record<string, string> = {
   технология: '🛠️',
   мультипредметная: '🎯',
 }
+// Ближайшая будущая дата олимпиады (для сортировки)
+const getNextDate = (o: Olympiad): string | null => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dates = (o.keyDates || []).map(d => d.date).sort()
+  const future = dates.filter(d => new Date(`${d}T00:00:00`) >= today)
+  if (future.length > 0) return future[0]
+  return dates.length > 0 ? dates[0] : null
+}
 
 const OlympiadsPage = () => {
   const [nameQuery, setNameQuery] = useState('')
@@ -2430,15 +2444,36 @@ const OlympiadsPage = () => {
   const [grade, setGrade] = useState('all')
   const [season, setSeason] = useState('all')
   const [format, setFormat] = useState('all')
-  const [sortBy, setSortBy] = useState('name')
+  const [sortBy, setSortBy] = useState('date')
   const [onlyRegOpen, setOnlyRegOpen] = useState(false)
   const [onlyFuture, setOnlyFuture] = useState(false)
+  const [onlyRsoSh, setOnlyRsoSh] = useState(false)
+  const [showSuggest, setShowSuggest] = useState(false)
   const [calendarOpen, setCalendarOpen] = useState(false)
 
   useEffect(() => { document.title = 'Олимпиады школьников — Физикум' }, [])
 
   const subjects = Array.from(new Set(olympiadsData.map(o => o.subject)))
   const seasons = Array.from(new Set(olympiadsData.map(o => o.season)))
+  // Подсказки при вводе названия (как на academy.team)
+  const suggestions = showSuggest
+    ? olympiadsData
+        .filter(o => o.title.toLowerCase().includes(nameQuery.trim().toLowerCase()))
+        .slice(0, 6)
+    : []
+
+  const resetFilters = () => {
+    setNameQuery('')
+    setSubject('all')
+    setLevel('all')
+    setGrade('all')
+    setSeason('all')
+    setFormat('all')
+    setSortBy('date')
+    setOnlyRegOpen(false)
+    setOnlyFuture(false)
+    setOnlyRsoSh(false)
+  }
 
   const filtered = olympiadsData
     .filter(o => {
@@ -2453,11 +2488,19 @@ const OlympiadsPage = () => {
       if (format !== 'all' && o.format !== format) return false
       if (onlyRegOpen && !o.registrationOpen) return false
       if (onlyFuture && !o.hasFutureEvents) return false
+      if (onlyRsoSh && !o.rsoSh) return false
       return true
     })
     .sort((a, b) => {
+      if (sortBy === 'date') {
+        const da = getNextDate(a)
+        const db = getNextDate(b)
+        if (!da && !db) return a.title.localeCompare(b.title, 'ru')
+        if (!da) return 1
+        if (!db) return -1
+        return da.localeCompare(db)
+      }
       if (sortBy === 'level') return a.level.localeCompare(b.level)
-      if (sortBy === 'subject') return a.subject.localeCompare(b.subject, 'ru')
       return a.title.localeCompare(b.title, 'ru')
     })
 
@@ -2500,12 +2543,32 @@ const OlympiadsPage = () => {
         <div className="olympiads-filters-row">
           <div className="olympiads-filter olympiads-filter-wide">
             <label>Название</label>
-            <input
-              className="olympiads-input"
-              placeholder="Например, Высшая проба"
-              value={nameQuery}
-              onChange={e => setNameQuery(e.target.value)}
-            />
+            <div className="olympiads-suggest-wrap">
+              <input
+                className="olympiads-input"
+                placeholder="Например, Высшая проба"
+                value={nameQuery}
+                onChange={e => setNameQuery(e.target.value)}
+                onFocus={() => setShowSuggest(true)}
+                onBlur={() => setTimeout(() => setShowSuggest(false), 150)}
+              />
+              {suggestions.length > 0 && (
+                <div className="olympiads-suggest">
+                  {suggestions.map(o => (
+                    <button
+                      key={o.id}
+                      className="olympiads-suggest-item"
+                      onMouseDown={() => {
+                        setNameQuery(o.title)
+                        setShowSuggest(false)
+                      }}
+                    >
+                      {o.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <div className="olympiads-filter">
             <label>Предмет</label>
@@ -2552,9 +2615,9 @@ const OlympiadsPage = () => {
           <div className="olympiads-filter">
             <label>Сортировка</label>
             <select className="olympiads-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+              <option value="date">По ближайшей дате</option>
               <option value="name">По названию</option>
               <option value="level">По уровню</option>
-              <option value="subject">По предмету</option>
             </select>
           </div>
           <label className="olympiads-checkbox">
@@ -2565,7 +2628,12 @@ const OlympiadsPage = () => {
             <input type="checkbox" checked={onlyFuture} onChange={e => setOnlyFuture(e.target.checked)} />
             Есть будущие события
           </label>
+          <label className="olympiads-checkbox">
+            <input type="checkbox" checked={onlyRsoSh} onChange={e => setOnlyRsoSh(e.target.checked)} />
+            Входит в перечень РСОШ
+          </label>
           <button className="btn btn-primary olympiads-search-btn" onClick={scrollToResults}>Найти</button>
+          <button className="olympiads-reset-btn" onClick={resetFilters}>Сбросить</button>
         </div>
       </div>
 
