@@ -3385,3 +3385,270 @@ body {
 .olympiads-reset-btn:hover {
   color: var(--text-primary);
 }
+/* ============ КАРТОЧКА ОЛИМПИАДЫ v2 ============ */
+.olympiad-card {
+  cursor: pointer;
+}
+
+.olympiad-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.olympiad-chip-more {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+.olympiad-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.olympiad-footer-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.olympiad-footer-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.olympiad-footer-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.olympiad-footer-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+}
+
+/* ============ СТРАНИЦА ОЛИМПИАДЫ ============ */
+.olympiad-detail-hero {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 36px;
+  margin-bottom: 24px;
+}
+
+.olympiad-detail-photo {
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(79, 125, 245, 0.15), rgba(236, 72, 153, 0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+}
+
+.olympiad-detail-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.olympiad-detail-photo-emoji {
+  font-size: 4rem;
+}
+
+.olympiad-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.olympiad-detail-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-align: left;
+  margin: 0;
+}
+
+.olympiad-detail-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.olympiad-detail-stats span {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.olympiad-detail-stats strong {
+  color: var(--accent-blue);
+}
+
+.olympiad-detail-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+/* Навигация по разделам */
+.olympiad-sections-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px;
+  margin-bottom: 24px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.olympiad-sections-nav button {
+  background: none;
+  border: none;
+  border-radius: 100px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.olympiad-sections-nav button:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-blue);
+}
+
+/* Разделы */
+.olympiad-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+  margin-bottom: 20px;
+  scroll-margin-top: 100px;
+}
+
+.olympiad-section h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.olympiad-section p {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.olympiad-chips-big {
+  gap: 10px;
+}
+
+.olympiad-chips-big .olympiad-chip {
+  font-size: 0.9rem;
+  padding: 8px 16px;
+}
+
+/* Таблица расписания */
+.olympiad-schedule-table {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.olympiad-schedule-head,
+.olympiad-schedule-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 20px;
+}
+
+.olympiad-schedule-head {
+  background: var(--bg-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.olympiad-schedule-row {
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.schedule-stage {
+  font-weight: 700;
+}
+
+.schedule-dates {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.schedule-note {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .olympiad-detail-hero {
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .olympiad-detail-photo {
+    width: 100%;
+    height: 160px;
+  }
+
+  .olympiad-schedule-head {
+    display: none;
+  }
+
+  .olympiad-schedule-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .olympiad-sections-nav {
+    border-radius: 20px;
+    width: 100%;
+  }
+}

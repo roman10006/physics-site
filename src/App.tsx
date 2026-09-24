@@ -2313,7 +2313,7 @@ const TodayPage = () => {
 interface Olympiad {
   id: number
   title: string
-  subject: string
+  subjects: string[]
   level: string
   gradesMin: number
   gradesMax: number
@@ -2326,34 +2326,50 @@ interface Olympiad {
   nextAction: string
   universities?: number
   checked: string
+  image?: string
+  site?: string
+  description?: string
+  locationsNote?: string
+  schedule?: { stage: string; dates: string; note?: string }[]
   keyDates?: { date: string; label: string }[]
 }
 
 const olympiadsData: Olympiad[] = [
   {
     id: 1,
-    title: 'Всероссийская олимпиада школьников (ВсОШ) по физике',
-    subject: 'физика',
-    level: 'I',
-    gradesMin: 7,
+    title: 'Всероссийская олимпиада школьников (ВсОШ)',
+    subjects: ['математика', 'информатика', 'физика', 'химия', 'биология', 'астрономия', 'география', 'история', 'обществознание', 'литература', 'русский язык', 'английский язык', 'немецкий язык', 'французский язык', 'китайский язык', 'испанский язык', 'итальянский язык', 'право', 'экономика', 'экология', 'ОБЗР', 'физическая культура', 'технология', 'искусство'],
+    level: 'Отсутствует',
+    gradesMin: 4,
     gradesMax: 11,
     season: '2026/27',
-    format: 'Очно',
+    format: 'Гибрид',
     status: 'Подтверждено',
     registrationOpen: true,
     hasFutureEvents: true,
     rsoSh: false,
     nextAction: 'Школьный этап — сентябрь-октябрь 2026',
-    checked: '20 сентября 2026',
-    keyDates: [
-      { date: '2026-09-20', label: 'Школьный этап (старт сезона)' },
-      { date: '2026-11-10', label: 'Муниципальный этап (ориентировочно)' },
+    checked: '24 сентября 2026',
+    site: 'https://np.fmschool72.ru/olimpiadi/vsosh',
+    locationsNote: 'Олимпиада проходит во всех субъектах РФ. Для каждого субъекта — свой сайт проведения. Пример для Тюменской области:',
+    schedule: [
+      { stage: 'Школьный этап', dates: 'сентябрь-октябрь 2026', note: '4–11 классы' },
+      { stage: 'Муниципальный этап', dates: 'ноябрь-декабрь 2026', note: 'только с 7 класса' },
+      { stage: 'Региональный этап', dates: 'январь-февраль 2027', note: 'только с 9 класса' },
+      { stage: 'Заключительный этап', dates: 'март-май 2027', note: 'только для 10–11 классов' },
     ],
+    description: `Всероссийская олимпиада школьников (ВсОШ) — это самая статусная и самая массовая олимпиада страны. Ежегодно в ней участвуют более 6,5 миллионов талантливых ребят.
+
+В олимпиаде четыре этапа: школьный, муниципальный, региональный и заключительный. Школьный этап рассчитан на 4-11 классы (для 4 классов — математика и русский язык). Муниципальный этап предусмотрен для 7-11 классов. Региональный и заключительный этапы проводятся для 9-11 классов. Чтобы попасть на каждый следующий этап, нужно преодолеть порог баллов, который устанавливается организаторами олимпиады.
+
+Хорошие результаты на заключительном этапе всероссийской олимпиады школьников дают льготы при поступлении: от дополнительных баллов за ЕГЭ или портфолио до зачисления без экзаменов в профильные ВУЗы. Право на льготу сохраняется в течение четырёх лет.
+
+В сезоне 2026–2027 Всероссийская олимпиада школьников (ВсОШ) проводится по 24 общеобразовательным предметам.`,
   },
   {
     id: 2,
     title: 'Национальная технологическая олимпиада (НТО)',
-    subject: 'технология',
+    subjects: ['технология', 'информатика', 'инженерное дело'],
     level: 'II',
     gradesMin: 5,
     gradesMax: 11,
@@ -2364,7 +2380,20 @@ const olympiadsData: Olympiad[] = [
     hasFutureEvents: true,
     rsoSh: true,
     nextAction: 'Регистрация до 9 декабря 2026',
-    checked: '20 сентября 2026',
+    checked: '24 сентября 2026',
+    site: 'https://ntcontest.ru/',
+    locationsNote: 'Основные этапы проходят онлайн. Заключительные этапы отдельных профилей — на площадках партнёрских вузов по всей России.',
+    schedule: [
+      { stage: 'Регистрация (юниоры, 5–7)', dates: '26 августа — 9 декабря 2026' },
+      { stage: 'Отборочный онлайн-этап (юниоры)', dates: '20 октября — 10 ноября 2026' },
+      { stage: 'Регистрация (школьники, 8–11)', dates: '26 августа — 22 октября 2026' },
+      { stage: 'Этап I — индивидуальный', dates: '17 сентября — 23 октября 2026' },
+      { stage: 'Этап II — командный', dates: '5 ноября — 11 декабря 2026' },
+      { stage: 'Финал', dates: '15 февраля — 15 апреля 2027' },
+    ],
+    description: `НТО — самые масштабные в России командные инженерные соревнования. Участники решают реальные задачи от компаний и вузов и знакомятся с инженерными профессиями.
+
+Олимпиада включает три трека: НТО Юниоры (5–7 классы), НТО для школьников (8–11 классы) и НТО для студентов колледжей и вузов.`,
     keyDates: [
       { date: '2026-10-20', label: 'Отборочный онлайн-этап (юниоры)' },
       { date: '2026-12-09', label: 'Конец регистрации (юниоры)' },
@@ -2373,7 +2402,7 @@ const olympiadsData: Olympiad[] = [
   {
     id: 3,
     title: 'Олимпиада школьников «Физтех» (математика, физика)',
-    subject: 'физика',
+    subjects: ['математика', 'физика', 'русский язык'],
     level: 'I',
     gradesMin: 9,
     gradesMax: 11,
@@ -2384,15 +2413,22 @@ const olympiadsData: Olympiad[] = [
     hasFutureEvents: true,
     rsoSh: true,
     nextAction: 'Регистрация открыта с 7 сентября 10:00 МСК',
-    checked: '20 сентября 2026',
-    keyDates: [
-      { date: '2026-09-07', label: 'Старт регистрации' },
+    checked: '24 сентября 2026',
+    site: 'https://olymp-online.mipt.ru/',
+    locationsNote: 'Отборочный этап проходит онлайн, заключительный — на площадках МФТИ и партнёрских школ.',
+    schedule: [
+      { stage: 'Регистрация', dates: 'с 7 сентября 2026, 10:00 МСК' },
+      { stage: 'Олимпиада по физике и математике', dates: '4 астрономических часа' },
+      { stage: 'Олимпиада по русскому языку', dates: '2 часа, в любое время в рамках дат' },
     ],
+    description: `7 сентября 2026 года в 10:00 по МСК начнётся регистрация на олимпиаду школьников «Физтех» по математике, физике и русскому языку. В олимпиаде могут участвовать школьники 9–11 классов.
+
+Другие профили: «научно-технический» (Старт в науку), биология, «инженерное дело», информатика.`,
   },
   {
     id: 4,
     title: 'Олимпиада школьников «Высшая проба»',
-    subject: 'мультипредметная',
+    subjects: ['экономика', 'математика', 'русский язык', 'литература', 'история'],
     level: 'I',
     gradesMin: 7,
     gradesMax: 11,
@@ -2402,11 +2438,22 @@ const olympiadsData: Olympiad[] = [
     registrationOpen: true,
     hasFutureEvents: true,
     rsoSh: true,
-    nextAction: 'Регистрация до 21 сентября 12:00 МСК',
-    checked: '20 сентября 2026',
+    nextAction: 'Первый тур отборочного этапа — 25 сентября 2026',
+    checked: '24 сентября 2026',
+    site: 'https://olymp.hse.ru/mmo/',
+    locationsNote: 'Отборочные туры проходят онлайн, заключительный этап — на площадках НИУ ВШЭ и партнёрских вузов.',
+    schedule: [
+      { stage: 'Регистрация', dates: '20 августа — 21 сентября 2026 (до 12:00 мск)' },
+      { stage: 'Первый тур отборочного этапа', dates: '25 сентября — 11 октября 2026' },
+      { stage: 'Второй тур отборочного этапа', dates: '13–22 ноября 2026' },
+      { stage: 'Заключительный этап', dates: '5–15 февраля 2027' },
+    ],
+    description: `«Высшая проба» — олимпиада НИУ ВШЭ для школьников 7–11 классов. Первый тур проходит в формате онлайн-тестирования, во второй тур выходят участники с лучшими результатами.
+
+Победители и призёры получают льготы при поступлении в университеты, а дипломанты 7–10 классов в следующем сезоне проходят сразу в заключительный этап без отбора.`,
     keyDates: [
-      { date: '2026-09-21', label: 'Конец регистрации (до 12:00 мск)' },
       { date: '2026-09-25', label: 'Первый тур отборочного этапа' },
+      { date: '2026-11-13', label: 'Второй тур отборочного этапа' },
     ],
   },
 ]
@@ -2438,6 +2485,7 @@ const getNextDate = (o: Olympiad): string | null => {
 }
 
 const OlympiadsPage = () => {
+  const navigate = useNavigate()
   const [nameQuery, setNameQuery] = useState('')
   const [subject, setSubject] = useState('all')
   const [level, setLevel] = useState('all')
@@ -2453,7 +2501,7 @@ const OlympiadsPage = () => {
 
   useEffect(() => { document.title = 'Олимпиады школьников — Физикум' }, [])
 
-  const subjects = Array.from(new Set(olympiadsData.map(o => o.subject)))
+  const subjects = Array.from(new Set(olympiadsData.flatMap(o => o.subjects))).sort((a, b) => a.localeCompare(b, 'ru'))
   const seasons = Array.from(new Set(olympiadsData.map(o => o.season)))
   // Подсказки при вводе названия (как на academy.team)
   const suggestions = showSuggest
@@ -2478,7 +2526,7 @@ const OlympiadsPage = () => {
   const filtered = olympiadsData
     .filter(o => {
       if (nameQuery.trim() && !o.title.toLowerCase().includes(nameQuery.trim().toLowerCase())) return false
-      if (subject !== 'all' && o.subject !== subject) return false
+      if (subject !== 'all' && !o.subjects.includes(subject)) return false
       if (level !== 'all' && o.level !== level) return false
       if (grade !== 'all') {
         const g = Number(grade)
@@ -2647,30 +2695,35 @@ const OlympiadsPage = () => {
           </div>
         ) : (
           filtered.map(o => (
-            <article key={o.id} className="olympiad-card">
-              <div className="olympiad-card-top">
-                <div className="olympiad-icon">{subjectIcons[o.subject] || '🎓'}</div>
-                <h3 className="olympiad-title">{o.title}</h3>
+            <article key={o.id} className="olympiad-card" onClick={() => navigate(`/olympiads/${o.id}`)}>
+              <h3 className="olympiad-title">{o.title}</h3>
+              <div className="olympiad-status-row">
+                <span className="olympiad-status">{o.status} · {o.season}</span>
+                <span className="olympiad-chip olympiad-chip-level">
+                  {o.level === 'Отсутствует' ? 'Без уровня' : `Уровень ${o.level}`}
+                </span>
               </div>
-              <div className="olympiad-status">{o.status} · {o.season}</div>
               <div className="olympiad-chips">
-                <span className="olympiad-chip">{o.subject}</span>
-                <span className="olympiad-chip olympiad-chip-level">Уровень {o.level}</span>
-                <span className="olympiad-chip">{o.gradesMin}-{o.gradesMax} класс</span>
-                <span className="olympiad-chip">{o.format}</span>
+                {o.subjects.slice(0, 3).map(s => (
+                  <span key={s} className="olympiad-chip">{s}</span>
+                ))}
+                {o.subjects.length > 3 && (
+                  <span className="olympiad-chip olympiad-chip-more">+{o.subjects.length - 3}</span>
+                )}
               </div>
               <div className="olympiad-next">
                 <span className="olympiad-next-label">Ближайшее действие</span>
                 <span className="olympiad-next-value">{o.nextAction}</span>
               </div>
               <div className="olympiad-footer">
-                <div>
-                  <span className="olympiad-footer-label">Вузов с льготами</span>
-                  <span className="olympiad-footer-value">{o.universities ?? '—'}</span>
+                <div className="olympiad-footer-stat">
+                  <span className="olympiad-footer-value">{o.gradesMin}–{o.gradesMax}</span>
+                  <span className="olympiad-footer-label">классы</span>
                 </div>
-                <div>
-                  <span className="olympiad-footer-label">Проверено</span>
-                  <span className="olympiad-footer-value">{o.checked}</span>
+                <div className="olympiad-footer-divider" />
+                <div className="olympiad-footer-stat">
+                  <span className="olympiad-footer-value">{o.universities ?? '—'}</span>
+                  <span className="olympiad-footer-label">вузов с льготами</span>
                 </div>
               </div>
             </article>
@@ -2709,6 +2762,182 @@ const OlympiadsPage = () => {
   )
 }
 
+// ============================================
+// СТРАНИЦА ОЛИМПИАДЫ
+// ============================================
+const OlympiadDetailPage = () => {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const olympiad = olympiadsData.find(o => o.id === Number(id))
+  const [calendarOpen, setCalendarOpen] = useState(false)
+
+  useEffect(() => {
+    if (olympiad) document.title = `${olympiad.title} — Олимпиады — Физикум`
+  }, [olympiad])
+
+  if (!olympiad) {
+    return (
+      <main className="page">
+        <div className="empty-state">
+          <div className="empty-emoji">🎓</div>
+          <h2>Олимпиада не найдена</h2>
+          <p>Возможно, она была удалена или адрес неверный.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/olympiads')}>Все олимпиады</button>
+        </div>
+      </main>
+    )
+  }
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const calendarItems = olympiad.keyDates && olympiad.keyDates.length > 0
+    ? olympiad.keyDates.map(d => ({ date: d.date, label: d.label }))
+    : (olympiad.schedule || []).map(s => ({ date: '', label: `${s.stage} — ${s.dates}` }))
+
+  return (
+    <main className="page olympiads-page">
+      <button className="back-button" onClick={() => navigate('/olympiads')}>← Все олимпиады</button>
+
+      {/* ГЕРОЙ */}
+      <div className="olympiad-detail-hero">
+        <div className="olympiad-detail-photo">
+          {olympiad.image ? (
+            <img src={olympiad.image} alt={olympiad.title} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+          ) : (
+            <span className="olympiad-detail-photo-emoji">{subjectIcons[olympiad.subjects[0]] || '🎓'}</span>
+          )}
+        </div>
+
+        <div className="olympiad-detail-content">
+          <div className="olympiad-status-row">
+            <span className="olympiad-status">{olympiad.status} · {olympiad.season}</span>
+            <span className="olympiad-chip olympiad-chip-level">
+              {olympiad.level === 'Отсутствует' ? 'Без уровня' : `Уровень ${olympiad.level}`}
+            </span>
+            <span className="olympiad-chip">{olympiad.format}</span>
+          </div>
+
+          <h1 className="olympiad-detail-title">{olympiad.title}</h1>
+
+          <div className="olympiad-chips">
+            {olympiad.subjects.slice(0, 8).map(s => (
+              <span key={s} className="olympiad-chip">{s}</span>
+            ))}
+            {olympiad.subjects.length > 8 && (
+              <span className="olympiad-chip olympiad-chip-more">+{olympiad.subjects.length - 8}</span>
+            )}
+          </div>
+
+          <div className="olympiad-detail-stats">
+            <span><strong>{olympiad.subjects.length}</strong> предметов</span>
+            <span><strong>{olympiad.schedule?.length ?? 0}</strong> этапов</span>
+            <span><strong>{olympiad.universities ?? '—'}</strong> вузов с льготами</span>
+          </div>
+
+          {/* Кнопки СЛЕВА */}
+          <div className="olympiad-detail-actions">
+            {olympiad.site && (
+              <a className="btn btn-primary" href={olympiad.site} target="_blank" rel="noopener noreferrer">
+                🌐 Официальный сайт
+              </a>
+            )}
+            <button className="btn btn-ghost" onClick={() => setCalendarOpen(true)}>📅 Календарь</button>
+          </div>
+        </div>
+      </div>
+
+      {/* НАВИГАЦИЯ ПО РАЗДЕЛАМ */}
+      <div className="olympiad-sections-nav">
+        <button onClick={() => scrollToSection('olymp-about')}>Об олимпиаде</button>
+        <button onClick={() => scrollToSection('olymp-schedule')}>Расписание</button>
+        <button onClick={() => scrollToSection('olymp-subjects')}>Предметы</button>
+        <button onClick={() => scrollToSection('olymp-places')}>Места проведения</button>
+      </div>
+
+      {/* РАЗДЕЛЫ */}
+      <section className="olympiad-section" id="olymp-about">
+        <h2>Об олимпиаде</h2>
+        {olympiad.description ? (
+          olympiad.description.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>)
+        ) : (
+          <p>Подробное описание появится позже.</p>
+        )}
+      </section>
+
+      <section className="olympiad-section" id="olymp-schedule">
+        <h2>Расписание</h2>
+        {olympiad.schedule && olympiad.schedule.length > 0 ? (
+          <div className="olympiad-schedule-table">
+            <div className="olympiad-schedule-head">
+              <span>Этап</span>
+              <span>Сроки</span>
+              <span>Примечание</span>
+            </div>
+            {olympiad.schedule.map((s, i) => (
+              <div className="olympiad-schedule-row" key={i}>
+                <span className="schedule-stage">{s.stage}</span>
+                <span className="schedule-dates">{s.dates}</span>
+                <span className="schedule-note">{s.note || '—'}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>Опубликованного расписания для этого сезона пока нет.</p>
+        )}
+      </section>
+
+      <section className="olympiad-section" id="olymp-subjects">
+        <h2>Предметы</h2>
+        <div className="olympiad-chips olympiad-chips-big">
+          {olympiad.subjects.map(s => (
+            <span key={s} className="olympiad-chip">{s}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="olympiad-section" id="olymp-places">
+        <h2>Места проведения</h2>
+        <p>{olympiad.locationsNote || 'Места проведения будут объявлены позже.'}</p>
+        {olympiad.site && (
+          <p>
+            <a className="inline-link" href={olympiad.site} target="_blank" rel="noopener noreferrer">
+              {olympiad.site}
+            </a>
+          </p>
+        )}
+      </section>
+
+      {/* МОДАЛКА КАЛЕНДАРЯ */}
+      {calendarOpen && (
+        <div className="modal-overlay" onClick={() => setCalendarOpen(false)}>
+          <div className="modal-content olympiads-calendar-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setCalendarOpen(false)}>✕</button>
+            <div className="modal-emoji">📅</div>
+            <h2 className="modal-title">Календарь олимпиады</h2>
+            <p className="modal-subtext">{olympiad.title}</p>
+            <div className="calendar-list">
+              {calendarItems.length === 0 ? (
+                <p className="calendar-empty">Пока нет дат — расписание ожидается!</p>
+              ) : (
+                calendarItems.map((d, i) => (
+                  <div key={i} className="calendar-item">
+                    {d.date && <span className="calendar-date">{formatDate(d.date)}</span>}
+                    <div>
+                      <div className="calendar-label">{d.label}</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            <button className="btn btn-primary btn-large" onClick={() => setCalendarOpen(false)}>Понятно!</button>
+          </div>
+        </div>
+      )}
+    </main>
+  )
+}
 
 // ============================================
 // ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
@@ -2804,6 +3033,7 @@ const AppContent = () => {
         <Route path="/news/:param" element={<NewsDispatcher openModal={openModal} />} />
         <Route path="/materials" element={<MaterialsPage openModal={openModal} />} />
         <Route path="/olympiads" element={<OlympiadsPage />} />
+        <Route path="/olympiads/:id" element={<OlympiadDetailPage />} />
         <Route path="/services" element={<ServicesPage openModal={openModal} />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="/today" element={<TodayPage />} />
