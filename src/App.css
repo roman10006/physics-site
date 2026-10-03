@@ -1564,29 +1564,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* ============ ФОТО ВНУТРИ НОВОСТИ ============ */
-.news-figure {
-  margin: 32px 0;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--bg-secondary);
-}
-
-.news-figure img {
-  width: 100%;
-  display: block;
-  max-height: 500px;
-  object-fit: cover;
-}
-
-.news-figure figcaption {
-  padding: 12px 20px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  background: rgba(0, 0, 0, 0.02);
-}
-
 /* Ссылка на источник */
 .news-detail-source a {
   color: var(--accent-blue);
@@ -1822,17 +1799,6 @@ body {
   padding: 10px 16px;
   font-size: 0.85rem;
   color: var(--text-muted);
-}
-
-/* Ссылка на источник */
-.news-detail-source a {
-  color: var(--accent-blue);
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.news-detail-source a:hover {
-  text-decoration: underline;
 }
 /* ============ ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ ============ */
 .legal-document {
