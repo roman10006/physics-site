@@ -1,9 +1,8 @@
 import { useState, useEffect, Fragment } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import type { NewsCategory, SortOrder, NewsItem } from '../types'
 import { newsData } from '../data/newsData'
-import { regions, sortedRegions } from '../data/regions'
-import { formatDate } from '../utils/formatDate'
+import { sortedRegions } from '../data/regions'
 import { NewsCard } from '../components/NewsCard'
 
 interface NewsListPageProps {

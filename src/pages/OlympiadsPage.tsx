@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import type { Olympiad } from '../types'
-import { olympiadsData, olympiadPlural, subjectIcons, getNextDate } from '../data/olympiadsData'
+import { olympiadsData, olympiadPlural, getNextDate } from '../data/olympiadsData'
 import { formatDate } from '../utils/formatDate'
 
 export const OlympiadsPage = () => {

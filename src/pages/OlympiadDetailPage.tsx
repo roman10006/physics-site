@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { olympiadsData, subjectIcons, formatDate } from '../data/olympiadsData'
+import { olympiadsData, subjectIcons } from '../data/olympiadsData'
+import { formatDate } from '../utils/formatDate'
 
 export const OlympiadDetailPage = () => {
   const { id } = useParams<{ id: string }>()
