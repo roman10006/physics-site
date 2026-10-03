@@ -6,7 +6,6 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { Modal } from './components/Modal'
 import { CookieBanner } from './components/CookieBanner'
-import { TodayWidget } from './components/TodayWidget'
 
 import { HomePage } from './pages/HomePage'
 import { NewsDispatcher } from './pages/NewsDispatcher'
@@ -93,7 +92,6 @@ const AppContent = () => {
   
   return (
     <div className="app">
-      {/* ЗВЁЗДЫ НА ФОНЕ */}
       <div className="stars">
         {stars.map((star, i) => (
           <div
@@ -110,7 +108,6 @@ const AppContent = () => {
         ))}
       </div>
       
-      {/* ГРАДИЕНТНЫЕ ПЯТНА */}
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
@@ -143,13 +140,12 @@ const AppContent = () => {
         } />
       </Routes>
       
-      {/* БЕГУЩАЯ СТРОКА */}
       <div className="ticker">
         <div className="ticker-content">
           <span>😂 Штирлиц стрелял вслепую. Слепая упала и зашептала «два-девять».</span>
-          <span>⚛️ У Эйнштейна спросили: «Почему вы не пользуетесь мылом?» — «А зачем? У меня уже есть теория относительности.»</span>
+          <span>️ У Эйнштейна спросили: «Почему вы не пользуетесь мылом?» — «А зачем? У меня уже есть теория относительности.»</span>
           <span>🔬 Чем больше знаешь, тем больше не знаешь.</span>
-          <span> Штирлиц стрелял вслепую. Слепая упала и зашептала «два-девять».</span>
+          <span>😂 Штирлиц стрелял вслепую. Слепая упала и зашептала «два-девять».</span>
           <span>⚛️ У Эйнштейна спросили: «Почему вы не пользуетесь мылом?» — «А зачем? У меня уже есть теория относительности.»</span>
           <span>🔬 Чем больше знаешь, тем больше не знаешь.</span>
         </div>
@@ -163,7 +159,6 @@ const AppContent = () => {
         onMore={() => navigate('/privacy')}
       />
       
-      {/* МАЛЕНЬКОЕ ОКНО СОЦСЕТЕЙ */}
       {socialModal && (
         <div className="modal-overlay" onClick={() => setSocialModal(null)}>
           <div className="social-modal" onClick={(e) => e.stopPropagation()}>
