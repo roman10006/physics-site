@@ -11,14 +11,14 @@ interface HomePageProps {
 export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
   
-  const cards = [
-    { id: 'materials', icon: '', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#8B5CF6', link: '/materials' },
-    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#EC4899', link: '/news' },
-    { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#6366F1', link: '/olympiads' },
-    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
-    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#10B981', action: () => openModal('Тренажёр') },
-    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EF4444', action: () => openModal('Форум') },
-  ]
+const cards = [
+  { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы для 7-11 классов', color: '#A855F7', link: '/materials' },
+  { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#EC4899', link: '/news' },
+  { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#06B6D4', link: '/olympiads' },
+  { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
+  { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
+  { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#10B981', action: () => openModal('Форум') },
+]
   
   const hasToday = getTodayEvents().length > 0
   
