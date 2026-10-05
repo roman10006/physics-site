@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties, type MouseEvent } from 'react'
+import { useEffect, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { TodayWidget } from '../components/TodayWidget'
 import { getTodayEvents } from '../data/todayEventsData'
@@ -11,29 +11,21 @@ interface HomePageProps {
 export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
   
-const cards = [
-  { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы для 7-11 классов', color: '#A855F7', link: '/materials' },
-  { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#EC4899', link: '/news' },
-  { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#06B6D4', link: '/olympiads' },
-  { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
-  { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
-  { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#10B981', action: () => openModal('Форум') },
-]
+  const cards = [
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#4F7DF5', link: '/materials' },
+    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
+    { id: 'olympiads', icon: '', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#F59E0B', link: '/olympiads' },
+    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#EC4899', link: '/services' },
+    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
+    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#64748B', action: () => openModal('Форум') },
+  ]
   
   const hasToday = getTodayEvents().length > 0
-  
-  // Исправленный тип: MouseEvent<HTMLElement> вместо HTMLDivElement
-  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    e.currentTarget.style.setProperty('--mouse-x', `${x}%`)
-    e.currentTarget.style.setProperty('--mouse-y', `${y}%`)
-  }
   
   return (
     <div className={hasToday ? 'home-layout home-layout-with-sidebar' : 'home-layout'}>
       <main className="hero">
+        {/* Баннер обратной связи */}
         <div className="feedback-banner">
           <span className="feedback-icon">💡</span>
           <p>Заметили ошибку на сайте — пожалуйста, напишите!</p>
@@ -61,8 +53,7 @@ const cards = [
                   key={card.id}
                   to={card.link}
                   className="bento-card"
-                  style={{ '--accent': card.color } as CSSProperties}
-                  onMouseMove={handleMouseMove}
+                  style={{ '--accent': card.color, textDecoration: 'none' } as CSSProperties}
                 >
                   {Inner}
                 </Link>
@@ -74,18 +65,18 @@ const cards = [
                 className="bento-card"
                 style={{ '--accent': card.color } as CSSProperties}
                 onClick={card.action}
-                onMouseMove={handleMouseMove}
               >
                 {Inner}
               </button>
             )
           })}
         </div>
+        {/* МЫ В СОЦСЕТЯХ */}
         <div className="social-section">
           <h3 className="social-section-title">Мы в соцсетях</h3>
           <div className="social-buttons">
             <button className="social-btn social-max" onClick={() => openSocial('max')}>
-              <span></span> Физикум в MAX
+              <span>💬</span> Физикум в MAX
             </button>
             <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
               <span>✈️</span> Физикум в Телеграм
@@ -93,6 +84,7 @@ const cards = [
           </div>
         </div>
       </main>
+      {/* РУБРИКА "В ЭТОТ ДЕНЬ" — справа */}
       {hasToday && (
         <aside className="today-sidebar">
           <TodayWidget />
