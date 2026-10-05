@@ -18,7 +18,6 @@ export const Header = ({ theme, toggleTheme, openModal }: HeaderProps) => {
   const isActive = (path: string) =>
     location.pathname === path || (path === '/news' && location.pathname.startsWith('/news'))
 
-  // Сброс поиска при переходе на другую страницу
   useEffect(() => {
     setSearchInfo(null)
     setNewsMatches([])
@@ -97,7 +96,7 @@ export const Header = ({ theme, toggleTheme, openModal }: HeaderProps) => {
       <div className="header-right">
         <div className="search-wrapper">
           <div className="search-box">
-            <span className="search-icon"></span>
+            <span className="search-icon">🔍</span>
             <input
               className="search-input"
               placeholder="Поиск по сайту..."
@@ -132,7 +131,7 @@ export const Header = ({ theme, toggleTheme, openModal }: HeaderProps) => {
           )}
         </div>
         <button className="theme-toggle" onClick={toggleTheme} aria-label="Сменить тему">
-          <span className="theme-icon">{theme === 'dark' ? '☀️' : ''}</span>
+          <span className="theme-icon">{theme === 'dark' ? '☀️' : '🌙'}</span>
         </button>
         <button className="btn btn-ghost" onClick={() => openModal('Вход')}>Вход</button>
         <button className="btn btn-primary" onClick={() => openModal('Регистрация')}>Регистрация</button>

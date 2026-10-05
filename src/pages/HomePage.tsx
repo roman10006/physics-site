@@ -12,20 +12,27 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
   
   const cards = [
-    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#4F7DF5', link: '/materials' },
-    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#10B981', link: '/news' },
-    { id: 'olympiads', icon: '', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#F59E0B', link: '/olympiads' },
-    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#EC4899', link: '/services' },
-    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#8B5CF6', action: () => openModal('Тренажёр') },
-    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#64748B', action: () => openModal('Форум') },
+    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#8B5CF6', link: '/materials' },
+    { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#EC4899', link: '/news' },
+    { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#6366F1', link: '/olympiads' },
+    { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
+    { id: 'trainer', icon: '', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#10B981', action: () => openModal('Тренажёр') },
+    { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EF4444', action: () => openModal('Форум') },
   ]
   
   const hasToday = getTodayEvents().length > 0
   
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    e.currentTarget.style.setProperty('--mouse-x', `${x}%`)
+    e.currentTarget.style.setProperty('--mouse-y', `${y}%`)
+  }
+  
   return (
     <div className={hasToday ? 'home-layout home-layout-with-sidebar' : 'home-layout'}>
       <main className="hero">
-        {/* Баннер обратной связи */}
         <div className="feedback-banner">
           <span className="feedback-icon">💡</span>
           <p>Заметили ошибку на сайте — пожалуйста, напишите!</p>
@@ -54,6 +61,7 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
                   to={card.link}
                   className="bento-card"
                   style={{ '--accent': card.color, textDecoration: 'none' } as CSSProperties}
+                  onMouseMove={handleMouseMove}
                 >
                   {Inner}
                 </Link>
@@ -65,13 +73,13 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
                 className="bento-card"
                 style={{ '--accent': card.color } as CSSProperties}
                 onClick={card.action}
+                onMouseMove={handleMouseMove}
               >
                 {Inner}
               </button>
             )
           })}
         </div>
-        {/* МЫ В СОЦСЕТЯХ */}
         <div className="social-section">
           <h3 className="social-section-title">Мы в соцсетях</h3>
           <div className="social-buttons">
@@ -84,7 +92,6 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
           </div>
         </div>
       </main>
-      {/* РУБРИКА "В ЭТОТ ДЕНЬ" — справа */}
       {hasToday && (
         <aside className="today-sidebar">
           <TodayWidget />
