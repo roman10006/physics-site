@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties } from 'react'
+import { useEffect, type CSSProperties, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { TodayWidget } from '../components/TodayWidget'
 import { getTodayEvents } from '../data/todayEventsData'
@@ -12,17 +12,18 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
   useEffect(() => { document.title = 'Физикум — сайт про физику для школьников' }, [])
   
   const cards = [
-    { id: 'materials', icon: '📚', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#8B5CF6', link: '/materials' },
+    { id: 'materials', icon: '', title: 'Материалы', description: 'Теория, подготовка к ОГЭ/ЕГЭ, учебные материалы', color: '#8B5CF6', link: '/materials' },
     { id: 'news', icon: '📰', title: 'Новости', description: 'Олимпиады, турниры и события в мире физики', color: '#EC4899', link: '/news' },
     { id: 'olympiads', icon: '🏆', title: 'Олимпиады', description: 'Всероссийские и международные олимпиады по физике', color: '#6366F1', link: '/olympiads' },
     { id: 'services', icon: '💼', title: 'Услуги', description: 'Репетиторы и другие услуги для подготовки', color: '#F59E0B', link: '/services' },
-    { id: 'trainer', icon: '', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#10B981', action: () => openModal('Тренажёр') },
+    { id: 'trainer', icon: '🎯', title: 'Тренажёр', description: 'Решай задачи и прокачивай навыки физика', color: '#10B981', action: () => openModal('Тренажёр') },
     { id: 'forum', icon: '💬', title: 'Форум', description: 'Общение с единомышленниками и экспертами', color: '#EF4444', action: () => openModal('Форум') },
   ]
   
   const hasToday = getTodayEvents().length > 0
   
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // Исправленный тип: MouseEvent<HTMLElement> вместо HTMLDivElement
+  const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
@@ -60,7 +61,7 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
                   key={card.id}
                   to={card.link}
                   className="bento-card"
-                  style={{ '--accent': card.color, textDecoration: 'none' } as CSSProperties}
+                  style={{ '--accent': card.color } as CSSProperties}
                   onMouseMove={handleMouseMove}
                 >
                   {Inner}
@@ -84,7 +85,7 @@ export const HomePage = ({ openModal, openSocial }: HomePageProps) => {
           <h3 className="social-section-title">Мы в соцсетях</h3>
           <div className="social-buttons">
             <button className="social-btn social-max" onClick={() => openSocial('max')}>
-              <span>💬</span> Физикум в MAX
+              <span></span> Физикум в MAX
             </button>
             <button className="social-btn social-tg" onClick={() => openSocial('tg')}>
               <span>✈️</span> Физикум в Телеграм
