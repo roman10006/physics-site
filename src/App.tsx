@@ -35,6 +35,47 @@ const AppContent = () => {
   const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
   const [socialModal, setSocialModal] = useState<'max' | 'tg' | null>(null)
   const [socialCopied, setSocialCopied] = useState(false)
+// Свечение вокруг курсора мыши
+useEffect(() => {
+  const glow = document.getElementById('cursorGlow')
+  if (!glow) return
+  
+  let currentX = 0
+  let currentY = 0
+  let targetX = 0
+  let targetY = 0
+  let animationId: number
+  
+  const handleMouseMove = (e: MouseEvent) => {
+    targetX = e.clientX
+    targetY = e.clientY
+  }
+  
+  // Плавное следование за курсором (интерполяция)
+  const animate = () => {
+    currentX += (targetX - currentX) * 0.15
+    currentY += (targetY - currentY) * 0.15
+    glow.style.left = `${currentX}px`
+    glow.style.top = `${currentY}px`
+    animationId = requestAnimationFrame(animate)
+  }
+  
+  window.addEventListener('mousemove', handleMouseMove)
+  animationId = requestAnimationFrame(animate)
+  
+  // Скрываем свечение, когда курсор уходит со страницы
+  const handleMouseLeave = () => { glow.style.opacity = '0' }
+  const handleMouseEnter = () => { glow.style.opacity = '1' }
+  document.addEventListener('mouseleave', handleMouseLeave)
+  document.addEventListener('mouseenter', handleMouseEnter)
+  
+  return () => {
+    window.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseleave', handleMouseLeave)
+    document.removeEventListener('mouseenter', handleMouseEnter)
+    cancelAnimationFrame(animationId)
+  }
+}, [])
   
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
@@ -111,7 +152,7 @@ const AppContent = () => {
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
-      
+      <div className="cursor-glow" id="cursorGlow" />
       <Header theme={theme} toggleTheme={toggleTheme} openModal={openModal} />
       
       <Routes>

@@ -88,41 +88,41 @@ body {
   50% { opacity: 1; transform: scale(1.5); }
 }
 
-/* ============ ФОН: ГРАДИЕНТНЫЕ ПЯТНА ============ */
+/* ============ ФОН: ГРАДИЕНТНЫЕ ПЯТНА (УВЕЛИЧЕННЫЕ) ============ */
 .blob {
   position: fixed;
   border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.4;
+  filter: blur(120px);
+  opacity: 0.55;
   pointer-events: none;
   z-index: 0;
 }
 
 .blob-1 {
-  width: 500px;
-  height: 500px;
-  background: var(--accent-blue);
-  top: -200px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #b026ff 0%, #7b2cbf 40%, transparent 70%);
+  top: -250px;
   left: -200px;
-  animation: float 15s ease-in-out infinite;
+  animation: float 18s ease-in-out infinite;
 }
 
 .blob-2 {
-  width: 400px;
-  height: 400px;
-  background: var(--accent-purple);
-  bottom: -150px;
-  right: -100px;
-  animation: float 20s ease-in-out infinite reverse;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #9d4edd 0%, #5a189a 40%, transparent 70%);
+  bottom: -200px;
+  right: -150px;
+  animation: float 22s ease-in-out infinite reverse;
 }
 
 .blob-3 {
-  width: 300px;
-  height: 300px;
-  background: var(--accent-pink);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #c77dff 0%, #7b2cbf 40%, transparent 70%);
   top: 40%;
   left: 50%;
-  animation: float 18s ease-in-out infinite;
+  animation: float 20s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -3591,6 +3591,34 @@ body {
 
 .schedule-note {
   color: var(--text-secondary);
+}
+
+/* ============ СВЕЧЕНИЕ ВОКРУГ КУРСОРА ============ */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(157, 78, 221, 0.35) 0%,
+    rgba(123, 44, 191, 0.2) 30%,
+    rgba(90, 24, 154, 0.08) 60%,
+    transparent 80%
+  );
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  filter: blur(20px);
+  transition: opacity 0.3s ease;
+  mix-blend-mode: screen;
+}
+
+/* Убираем свечение на мобильных — там нет курсора */
+@media (hover: none) {
+  .cursor-glow {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
