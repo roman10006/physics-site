@@ -6,6 +6,7 @@ import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { Modal } from './components/Modal'
 import { CookieBanner } from './components/CookieBanner'
+import { ParticleWaves } from './components/ParticleWaves'
 
 import { HomePage } from './pages/HomePage'
 import { NewsDispatcher } from './pages/NewsDispatcher'
@@ -32,65 +33,13 @@ const AppContent = () => {
   const [cookieAccepted, setCookieAccepted] = useState(() => {
     return localStorage.getItem('cookieAccepted') === 'true'
   })
-  const [stars, setStars] = useState<{x: number; y: number; size: number; delay: number}[]>([])
   const [socialModal, setSocialModal] = useState<'max' | 'tg' | null>(null)
   const [socialCopied, setSocialCopied] = useState(false)
-// Свечение вокруг курсора мыши
-useEffect(() => {
-  const glow = document.getElementById('cursorGlow')
-  if (!glow) return
-  
-  let currentX = 0
-  let currentY = 0
-  let targetX = 0
-  let targetY = 0
-  let animationId: number
-  
-  const handleMouseMove = (e: MouseEvent) => {
-    targetX = e.clientX
-    targetY = e.clientY
-  }
-  
-  // Плавное следование за курсором (интерполяция)
-  const animate = () => {
-    currentX += (targetX - currentX) * 0.15
-    currentY += (targetY - currentY) * 0.15
-    glow.style.left = `${currentX}px`
-    glow.style.top = `${currentY}px`
-    animationId = requestAnimationFrame(animate)
-  }
-  
-  window.addEventListener('mousemove', handleMouseMove)
-  animationId = requestAnimationFrame(animate)
-  
-  // Скрываем свечение, когда курсор уходит со страницы
-  const handleMouseLeave = () => { glow.style.opacity = '0' }
-  const handleMouseEnter = () => { glow.style.opacity = '1' }
-  document.addEventListener('mouseleave', handleMouseLeave)
-  document.addEventListener('mouseenter', handleMouseEnter)
-  
-  return () => {
-    window.removeEventListener('mousemove', handleMouseMove)
-    document.removeEventListener('mouseleave', handleMouseLeave)
-    document.removeEventListener('mouseenter', handleMouseEnter)
-    cancelAnimationFrame(animationId)
-  }
-}, [])
   
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
   }, [theme])
-  
-  useEffect(() => {
-    const newStars = Array.from({length: 50}, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2 + 1,
-      delay: Math.random() * 3,
-    }))
-    setStars(newStars)
-  }, [])
   
   useEffect(() => {
     window.scrollTo({ top: 0 })
@@ -107,7 +56,7 @@ useEffect(() => {
   }
   
   const socialLinks = {
-    max: { url: 'https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc', name: 'Физикум в MAX', icon: '💬' },
+    max: { url: 'https://max.ru/join/u4jqdt9YuI7pJVBLpfm5P5V6VoQN8jDro6VdT_T_tsc', name: 'Физикум в MAX', icon: '' },
     tg: { url: 'https://t.me/physicym', name: 'Физикум в Телеграм', icon: '✈️' },
   }
   
@@ -133,26 +82,14 @@ useEffect(() => {
   
   return (
     <div className="app">
-      <div className="stars">
-        {stars.map((star, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              animationDelay: `${star.delay}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* АНИМИРОВАННЫЕ ВОЛНЫ ИЗ ЧАСТИЦ */}
+      <ParticleWaves />
       
+      {/* ГРАДИЕНТНЫЕ ПЯТНА */}
       <div className="blob blob-1" />
       <div className="blob blob-2" />
       <div className="blob blob-3" />
-      <div className="cursor-glow" id="cursorGlow" />
+      
       <Header theme={theme} toggleTheme={toggleTheme} openModal={openModal} />
       
       <Routes>
@@ -181,6 +118,7 @@ useEffect(() => {
         } />
       </Routes>
       
+      {/* БЕГУЩАЯ СТРОКА */}
       <div className="ticker">
         <div className="ticker-content">
           <span>😂 Штирлиц стрелял вслепую. Слепая упала и зашептала «два-девять».</span>
@@ -200,6 +138,7 @@ useEffect(() => {
         onMore={() => navigate('/privacy')}
       />
       
+      {/* МАЛЕНЬКОЕ ОКНО СОЦСЕТЕЙ */}
       {socialModal && (
         <div className="modal-overlay" onClick={() => setSocialModal(null)}>
           <div className="social-modal" onClick={(e) => e.stopPropagation()}>
