@@ -44,8 +44,7 @@ export const ParticleWaves = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       time += 0.008
 
-      particles.forEach((p, i) => {
-        const row = Math.floor(i / (canvas.width / spacing))
+      particles.forEach((p) => {
         const wave1 = Math.sin(p.baseX * 0.003 + time) * 60
         const wave2 = Math.sin(p.baseX * 0.005 - time * 0.8) * 40
         const wave3 = Math.cos(p.baseX * 0.002 + time * 0.6) * 30
